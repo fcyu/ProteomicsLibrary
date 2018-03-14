@@ -404,6 +404,20 @@ public class MassTool {
         }
     }
 
+    public static boolean isAA(char aa) {
+        return aa == 'H' || aa == 'I' || aa == 'L' || aa == 'K' || aa == 'M' || aa == 'F' || aa == 'T' || aa == 'W' || aa == 'V' || aa == 'R' || aa == 'C' || aa == 'Q' || aa == 'G' || aa == 'P' || aa == 'Y' || aa == 'A' || aa == 'D' || aa == 'N' || aa == 'E' || aa == 'S' || aa == 'U' || aa == 'O';
+    }
+
+    public static boolean containsNonAAAndNC(String sequence) {
+        char[] charArray = sequence.toCharArray();
+        for (char aa : charArray) {
+            if (!(aa == 'H' || aa == 'I' || aa == 'L' || aa == 'K' || aa == 'M' || aa == 'F' || aa == 'T' || aa == 'W' || aa == 'V' || aa == 'R' || aa == 'C' || aa == 'Q' || aa == 'G' || aa == 'P' || aa == 'Y' || aa == 'A' || aa == 'D' || aa == 'N' || aa == 'E' || aa == 'S' || aa == 'U' || aa == 'O' || aa == 'n' || aa == 'c')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public double calResidueMass(String sequence) { // n and c are also AA. Consider fixed modification automatically
         double totalMass = 0;
         Matcher matcher = getAAMatcher(sequence, bracketStyle);
