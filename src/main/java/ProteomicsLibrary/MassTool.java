@@ -452,21 +452,21 @@ public class MassTool {
         return temp.toArray(new AA[temp.size()]);
     }
 
-    public Set<String> buildPeptideSet(String proSeq) {
-        Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proSeq);
+    public Set<String> buildPeptideSet(String proteinSequence) {
+        Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proteinSequence);
         Set<String> peptideSeqSet = new HashSet<>();
 
         for (int i = 0; i <= missedCleavage; ++i) {
             for (int[] digestRange1 : digestRangeMap.get(i)) {
-                String subString = proSeq.substring(digestRange1[0], digestRange1[1]);
+                String subString = proteinSequence.substring(digestRange1[0], digestRange1[1]);
                 peptideSeqSet.add("n" + subString + "c");
             }
         }
         return peptideSeqSet;
     }
 
-    public double[][] buildIonArray(String seq, int maxCharge) {
-        AA[] aaArray = seqToAAList(seq, bracketStyle);
+    public double[][] buildIonArray(String squence, int maxCharge) {
+        AA[] aaArray = seqToAAList(squence, bracketStyle);
 
         double[] inverseChargeArray = new double[maxCharge];
         for (int charge = 1; charge <= maxCharge; ++charge) {
@@ -555,20 +555,20 @@ public class MassTool {
     /*
     Cross-linking part
      */
-    public Set<String> buildChainSet(String proSequence, short linkerType) {
-        Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proSequence);
+    public Set<String> buildChainSet(String proteinSequence, short linkerType) {
+        Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proteinSequence);
         Set<String> chainSequenceSet = new HashSet<>();
 
         for (int i = 0; i <= missedCleavage; ++i) {
             for (int[] digestRange1 : digestRangeMap.get(i)) {
-                String subString = proSequence.substring(digestRange1[0], digestRange1[1]);
+                String subString = proteinSequence.substring(digestRange1[0], digestRange1[1]);
                 if (linkerType == 1 && subString.substring(0, subString.length() - 1).contains("K")) {
                     chainSequenceSet.add("n" + subString + "c");
                 } else if (linkerType == 2 && subString.substring(0, subString.length() - 1).contains("C")) {
                     chainSequenceSet.add("n" + subString + "c");
                 }
 
-                if (digestRange1[1] == proSequence.length()) {
+                if (digestRange1[1] == proteinSequence.length()) {
                     // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
                     if (linkerType == 1 && subString.contains("K")) {
                         chainSequenceSet.add("n" + subString + "c");
@@ -581,7 +581,7 @@ public class MassTool {
                 // Add N-term peptide
                 if (digestRangeMap.get(i).size() > 0) {
                     int[] digestRange = digestRangeMap.get(i).get(0);
-                    String subString = proSequence.substring(digestRange[0], digestRange[1]);
+                    String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
                     chainSequenceSet.add("n" + subString + "c");
                 }
             }
@@ -589,7 +589,7 @@ public class MassTool {
         return chainSequenceSet;
     }
 
-    public double generateTheoFragmentAndCalXCorr(String seq, short linkSite, double additionalMass, int precursorCharge, SparseVector xcorrPL) {
+    public double generateTheoFragmentAndCalXCorr(String sequence, short linkSite, double additionalMass, int precursorCharge, SparseVector xcorrPL) {
         linkSite = (short) Math.max(1, linkSite);
 
         int localMaxCharge = Math.min(6, Math.max(precursorCharge - 1, 1));
@@ -598,7 +598,7 @@ public class MassTool {
             inverseChargeArray[charge - 1] = (double) 1 / (double) charge;
         }
 
-        AA[] aaArray = seqToAAList(seq, bracketStyle);
+        AA[] aaArray = seqToAAList(sequence, bracketStyle);
 
         double xcorr = 0;
 
@@ -656,12 +656,12 @@ public class MassTool {
         return xcorr * 0.005;
     }
 
-    private Map<Integer, List<int[]>> digestTrypsin(String proSeq) {
+    private Map<Integer, List<int[]>> digestTrypsin(String proteinSequence) {
         // Cut a protein
         List<Integer> cutPointList = new ArrayList<>(200);
-        int length = proSeq.length();
+        int length = proteinSequence.length();
         int idxStart = 0;
-        Matcher matchObj = digestSitePattern.matcher(proSeq);
+        Matcher matchObj = digestSitePattern.matcher(proteinSequence);
         cutPointList.add(0);
         while (idxStart < length) {
             if (matchObj.find()) {
