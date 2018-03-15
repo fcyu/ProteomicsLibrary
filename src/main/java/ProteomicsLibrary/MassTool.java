@@ -464,6 +464,17 @@ public class MassTool {
                 peptideSeqSet.add("n" + subString + "c");
             }
         }
+
+        // consider first "M" situation
+        if (proteinSequence.startsWith("M")) {
+            String newSequence = proteinSequence.substring(1);
+            digestRangeMap = digestTrypsin(newSequence);
+            for (int i = 0; i <= missedCleavage; ++i) {
+                int[] digestRange1 = digestRangeMap.get(i).get(0);
+                String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
+                peptideSeqSet.add("n" + subString + "c");
+            }
+        }
         return peptideSeqSet;
     }
 

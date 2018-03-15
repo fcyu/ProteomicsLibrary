@@ -95,6 +95,38 @@ public class MassToolTest {
     }
 
     @Test
+    public void buildPeptideSet() {
+        MassTool massTool = new MassTool(2, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
+
+        String proteinSequence = "MSDDFKDEDRDDKPSSDKKDF";
+        Set<String> result = massTool.buildPeptideSet(proteinSequence);
+
+        Set<String> groundTruth = new HashSet<>();
+        groundTruth.add("nMSDDFKc");
+        groundTruth.add("nSDDFKc");
+        groundTruth.add("nDEDRc");
+        groundTruth.add("nDDKPSSDKc");
+        groundTruth.add("nKc");
+        groundTruth.add("nDFc");
+        groundTruth.add("nMSDDFKDEDRc");
+        groundTruth.add("nSDDFKDEDRc");
+        groundTruth.add("nDEDRDDKPSSDKc");
+        groundTruth.add("nDDKPSSDKKc");
+        groundTruth.add("nKDFc");
+        groundTruth.add("nMSDDFKDEDRDDKPSSDKc");
+        groundTruth.add("nSDDFKDEDRDDKPSSDKc");
+        groundTruth.add("nDEDRDDKPSSDKKc");
+        groundTruth.add("nDDKPSSDKKDFc");
+
+        String[] resultArray = result.toArray(new String[result.size()]);
+        Arrays.sort(resultArray);
+        String[] groundTruthArray = groundTruth.toArray(new String[groundTruth.size()]);
+        Arrays.sort(groundTruthArray);
+
+        assertArrayEquals(resultArray, groundTruthArray);
+    }
+
+    @Test
     public void seqToAAList() {
         MassTool mass_tool_obj = new MassTool(1, fix_mod_map, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
         String seq = "nGHUKc";
