@@ -1,5 +1,7 @@
 package ProteomicsLibrary;
 
+import com.google.common.collect.Multimap;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -170,6 +172,58 @@ public class DbTool {
         } else {
             return String.valueOf(tempArray);
         }
+    }
+
+    public static Character[] getLeftRightFlank(String peptide, Multimap<String, String> peptideProteinMap, Map<String, String> proteinSequenceMap, String cleavageSite, String protectionSite, boolean cleavageFromCTerm) throws Exception {
+        Character[] leftRightFlank = new Character[2];
+        String peptideString = DbTool.getSequenceOnly(peptide);
+        for (String proteinId : peptideProteinMap.get(peptide)) {
+            String proteinSequence = proteinSequenceMap.get(proteinId);
+            int startIdx = proteinSequence.indexOf(peptideString);
+            while (startIdx >= 0) {
+                if (startIdx == 0 || ((startIdx == 1 && proteinSequence.charAt(0) == 'M'))) { // considering first "M" being cut situation.
+                    int tempIdx = startIdx + peptideString.length();
+                    if (tempIdx < proteinSequence.length()) {
+                        leftRightFlank[1] = proteinSequence.charAt(tempIdx);
+                        if ((cleavageFromCTerm && !protectionSite.contains(leftRightFlank[1].toString())) || (!cleavageFromCTerm && cleavageSite.contains(leftRightFlank[1].toString()))) {
+                            leftRightFlank[0] = '-';
+                            break;
+                        } else {
+                            leftRightFlank[1] = null;
+                        }
+                    } else if (tempIdx == proteinSequence.length()) {
+                        leftRightFlank[0] = '-';
+                        leftRightFlank[1] = '-';
+                        break;
+                    } else {
+                        throw new Exception(String.format(Locale.US, "The peptide %s is longer than its protein %s.", peptideString, proteinSequence));
+                    }
+                } else if (startIdx == proteinSequence.length() - peptideString.length()) {
+                    leftRightFlank[0] = proteinSequence.charAt(startIdx - 1);
+                    if ((cleavageFromCTerm && cleavageSite.contains(leftRightFlank[0].toString())) || (!cleavageFromCTerm && !protectionSite.contains(leftRightFlank[0].toString()))) {
+                        leftRightFlank[1] = '-';
+                        break;
+                    } else {
+                        leftRightFlank[0] = null;
+                    }
+                } else {
+                    leftRightFlank[0] = proteinSequence.charAt(startIdx - 1);
+                    leftRightFlank[1] = proteinSequence.charAt(startIdx + peptideString.length());
+                    if ((cleavageFromCTerm && cleavageSite.contains(leftRightFlank[0].toString()) && !protectionSite.contains(leftRightFlank[1].toString())) || (!cleavageFromCTerm && cleavageSite.contains(leftRightFlank[1].toString()) && !protectionSite.contains(leftRightFlank[0].toString()))) {
+                        break;
+                    } else {
+                        leftRightFlank[0] = null;
+                        leftRightFlank[1] = null;
+                    }
+                }
+                startIdx = proteinSequence.indexOf(peptideString, startIdx + 1);
+            }
+
+            if (leftRightFlank[0] != null && leftRightFlank[1] != null) {
+                return leftRightFlank;
+            }
+        }
+        return null;
     }
 
     public static Set<Integer> findPeptideLocation(String proteinSequence, String peptide, String cutSite, String protectSite) throws NullPointerException {

@@ -1,5 +1,9 @@
 package ProteomicsLibrary;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -87,5 +91,39 @@ public class DbToolTest {
         decoySequence = DbTool.shuffleSeqFY(sequence, "KR", "P", false);
         System.out.println("Target:\t" + sequence);
         System.out.println("Decoy:\t" + decoySequence);
+    }
+
+    @Test
+    public void getLeftRightFlank() {
+        try {
+            String peptide = "nSDSDD(229.22)SDSDSKc";
+            Multimap<String, String> peptideProteinMap = TreeMultimap.create();
+            peptideProteinMap.put("nSDSDD(229.22)SDSDSKc", "protein1");
+            peptideProteinMap.put("nSDSDD(229.22)SDSDSKc", "protein2");
+            peptideProteinMap.put("nSDSDD(229.22)SDSDSKc", "protein3");
+            Map<String, String> proteinSequenceMap = new HashMap<>();
+            proteinSequenceMap.put("protein1", "SDSDSKSDSDDSDSDSKPFDSDS");
+            proteinSequenceMap.put("protein2", "SDSDSASDSDDSDSDSKADS");
+            proteinSequenceMap.put("protein3", "SDSDSRSDSDDSDSDSKSDSDS");
+            Character[] leftRightFlank = DbTool.getLeftRightFlank(peptide, peptideProteinMap, proteinSequenceMap, "KR", "P", true);
+            assertEquals(leftRightFlank[0], new Character('R'));
+            assertEquals(leftRightFlank[1], new Character('S'));
+
+            peptide = "nRSDSDD(229.22)SDSDSc";
+            peptideProteinMap.clear();
+            peptideProteinMap.put("nRSDSDD(229.22)SDSDSc", "protein1");
+            peptideProteinMap.put("nRSDSDD(229.22)SDSDSc", "protein2");
+            peptideProteinMap.put("nRSDSDD(229.22)SDSDSc", "protein3");
+            proteinSequenceMap.clear();
+            proteinSequenceMap.put("protein1", "PRSDSDDSDSDSRDSDS");
+            proteinSequenceMap.put("protein2", "MRSDSDDSDSDSKDSDS");
+            proteinSequenceMap.put("protein3", "HRSDSDDSDSDSRDSDS");
+            leftRightFlank = DbTool.getLeftRightFlank(peptide, peptideProteinMap, proteinSequenceMap, "KR", "P", false);
+            assertEquals(leftRightFlank[0], new Character('-'));
+            assertEquals(leftRightFlank[1], new Character('K'));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
     }
 }
