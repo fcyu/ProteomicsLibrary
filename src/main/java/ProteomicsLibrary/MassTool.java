@@ -470,9 +470,11 @@ public class MassTool {
             String newSequence = proteinSequence.substring(1);
             digestRangeMap = digestTrypsin(newSequence);
             for (int i = 0; i <= missedCleavage; ++i) {
-                int[] digestRange1 = digestRangeMap.get(i).get(0);
-                String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
-                peptideSeqSet.add("n" + subString + "c");
+                if (!digestRangeMap.get(i).isEmpty()) {
+                    int[] digestRange1 = digestRangeMap.get(i).get(0);
+                    String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
+                    peptideSeqSet.add("n" + subString + "c");
+                }
             }
         }
         return peptideSeqSet;
