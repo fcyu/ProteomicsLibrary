@@ -68,7 +68,12 @@ public class MassToolTest {
         ground_truth.add("nIATAAAASKPSLNASTSVNPKLSKc");
         ground_truth.add("nLSKTMDYMRc");
         ground_truth.add("nVFKTYc");
-        assertEquals(ground_truth, result);
+
+        String[] groundTruthArray = ground_truth.toArray(new String[ground_truth.size()]);
+        Arrays.sort(groundTruthArray);
+        String[] resultArray = result.toArray(new String[result.size()]);
+        Arrays.sort(resultArray);
+        assertArrayEquals(groundTruthArray, resultArray);
 
         // 2 missed-cleavage, N-term linkable
         mass_tool_obj = new MassTool(2, fix_mod_map, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
@@ -86,7 +91,12 @@ public class MassToolTest {
         ground_truth.add("nIATAAAASKPSLNASTSVNPKLSKTMDYMRc");
         ground_truth.add("nLSKTMDYMRIFSVFVVTLWIIRc");
         ground_truth.add("nVDARVFKTYc");
-        assertEquals(ground_truth, result);
+
+        groundTruthArray = ground_truth.toArray(new String[ground_truth.size()]);
+        Arrays.sort(groundTruthArray);
+        resultArray = result.toArray(new String[result.size()]);
+        Arrays.sort(resultArray);
+        assertArrayEquals(groundTruthArray, resultArray);
     }
 
     @Test
