@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 public class DbTool {
 
+    private static final Random random = new Random();
+
     private Map<String, String> proteinSequenceMap = new HashMap<>();
     private Map<String, String> proteinAnnotateMap = new HashMap<>();
 
@@ -79,6 +81,95 @@ public class DbTool {
 
     public Map<String, String> getProteinAnnotateMap() {
         return proteinAnnotateMap;
+    }
+
+    public static String shuffleSeq(String sequence, String cleavageSite, String protectionSite, boolean cleavageFromCTerm) { // shuffling the protein sequence with without randomness
+        // todo: A protection site may be shuffled, which may result in "non-existing" peptides after digestion.
+        // todo: A "potential" protection site may also be shuffled to the side of a cleavage site so that it prevents a peptide from being digested.
+        String sequenceToBeShuffled;
+        if (sequence.startsWith("M")) {  // don't shuffle the first "M" because it has a special meaning.
+            sequenceToBeShuffled = sequence.substring(1);
+        } else {
+            sequenceToBeShuffled = sequence;
+        }
+
+        Pattern digestSitePattern = MassTool.getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
+        Set<Integer> cutSiteSet = new HashSet<>();
+        Matcher matcher = digestSitePattern.matcher(sequenceToBeShuffled);
+        while (matcher.find()) {
+            cutSiteSet.add(matcher.start());
+        }
+        char[] tempArray = sequenceToBeShuffled.toCharArray();
+        int idx = 0;
+        while (idx < tempArray.length - 1) {
+            if (!cutSiteSet.contains(idx) && !cutSiteSet.contains(idx + 1)) {
+                char temp = tempArray[idx];
+                tempArray[idx] = tempArray[idx + 1];
+                tempArray[idx + 1] = temp;
+                idx += 2;
+            } else {
+                ++idx;
+            }
+        }
+
+        if (sequence.startsWith("M")) {
+            return "M" + String.valueOf(tempArray);
+        } else {
+            return String.valueOf(tempArray);
+        }
+    }
+
+    public static String shuffleSeqFY(String sequence, String cleavageSite, String protectionSite, boolean cleavageFromCTerm) { // shuffling the protein sequence using the Fisher-Yates approach
+        // todo: A protection site may be shuffled, which may result in "non-existing" peptides after digestion.
+        // todo: A "potential" protection site may also be shuffled to the side of a cleavage site so that it prevents a peptide from being digested.
+        String sequenceToBeShuffled;
+        if (sequence.startsWith("M")) { // don't shuffle the first "M" because it has a special meaning.
+            sequenceToBeShuffled = sequence.substring(1);
+        } else {
+            sequenceToBeShuffled = sequence;
+        }
+
+        Pattern digestSitePattern = MassTool.getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
+        Set<Integer> cutSiteSet = new HashSet<>();
+        Matcher matcher = digestSitePattern.matcher(sequenceToBeShuffled);
+        while (matcher.find()) {
+            cutSiteSet.add(matcher.start());
+        }
+        char[] tempArray = sequenceToBeShuffled.toCharArray();
+        int time = 0;
+        Integer[] cutSiteArray = cutSiteSet.toArray(new Integer[cutSiteSet.size()]);
+        Arrays.sort(cutSiteArray);
+
+        // shuffling in each cut range.
+        int startIdx;
+        int endIdx;
+        String decoySequence;
+        for (int k = 0; k <= cutSiteArray.length; ++k) {
+            startIdx = k == 0 ? 0 : cutSiteArray[k - 1] + 1;
+            endIdx = k == cutSiteArray.length ? tempArray.length : cutSiteArray[k];
+            if (endIdx - startIdx > 2) {
+                do {
+                    // the standard Fisher-Yates shuffle
+                    for (int i = startIdx; i < endIdx; ++i) {
+                        int j = random.nextInt(endIdx - startIdx);
+                        while (startIdx + j == i) {
+                            j = random.nextInt(endIdx - startIdx);
+                        }
+                        char temp = tempArray[i];
+                        tempArray[i] = tempArray[startIdx + j];
+                        tempArray[startIdx + j] = temp;
+                    }
+                    decoySequence = String.valueOf(tempArray).substring(startIdx, endIdx);
+                    ++time;
+                } while (sequenceToBeShuffled.substring(startIdx, endIdx).contentEquals(decoySequence) && time < 10);
+            }
+        }
+
+        if (sequence.startsWith("M")) {
+            return "M" + String.valueOf(tempArray);
+        } else {
+            return String.valueOf(tempArray);
+        }
     }
 
     public static Set<Integer> findPeptideLocation(String proteinSequence, String peptide, String cutSite, String protectSite) throws NullPointerException {

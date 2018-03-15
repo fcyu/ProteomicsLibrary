@@ -49,4 +49,43 @@ public class DbToolTest {
             assertEquals(pro_annotate_map.get(k), ground_truth.get(k));
         }
     }
+
+    @Test
+    public void shuffleSeq() {
+        String sequence = "MJUGHSDKSSDSDKPSDSRSDK";
+        String result = DbTool.shuffleSeq(sequence, "KR", "P", true);
+        String groundTruth = "MUJHGDSKSSSDKDSPSDRDSK";
+        assertEquals(result, groundTruth);
+
+        sequence = "JUGHSDKSSDSDKPSDSRSDKASD";
+        result = DbTool.shuffleSeq(sequence, "KR", "P", true);
+        groundTruth = "UJHGDSKSSSDKDSPSDRDSKSAD";
+        assertEquals(result, groundTruth);
+
+        sequence = "MJUGHSDPKSSDSDKPSDSRSDK";
+        result = DbTool.shuffleSeq(sequence, "KR", "P", false);
+        groundTruth = "MUJHGDSKPSSSDDKSPSDRDSK";
+        assertEquals(result, groundTruth);
+    }
+
+    @Test
+    public void shuffleSeqFY() {
+        String sequence = "MJUGHSDKSSDSDKPSDSRSDK";
+        System.out.println(String.format(Locale.US, "Test shuffleSeqFY(%s, %s, %s, %s):", sequence, "KR", "P", "true"));
+        String decoySequence = DbTool.shuffleSeqFY(sequence, "KR", "P", true);
+        System.out.println("Target:\t" + sequence);
+        System.out.println("Decoy:\t" + decoySequence);
+
+        sequence = "JUGHSDKSSDSDKPSDSRSDKASD";
+        System.out.println(String.format(Locale.US, "Test shuffleSeqFY(%s, %s, %s, %s):", sequence, "KR", "P", "true"));
+        decoySequence = DbTool.shuffleSeqFY(sequence, "KR", "P", true);
+        System.out.println("Target:\t" + sequence);
+        System.out.println("Decoy:\t" + decoySequence);
+
+        sequence = "MJUGHSDPKSSDSDKPSDSRSDK";
+        System.out.println(String.format(Locale.US, "Test shuffleSeqFY(%s, %s, %s, %s):", sequence, "KR", "P", "false"));
+        decoySequence = DbTool.shuffleSeqFY(sequence, "KR", "P", false);
+        System.out.println("Target:\t" + sequence);
+        System.out.println("Decoy:\t" + decoySequence);
+    }
 }
