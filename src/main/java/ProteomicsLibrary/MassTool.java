@@ -194,13 +194,7 @@ public class MassTool {
         massTable.put('$', (massTable.get('Q') + massTable.get('K')) * 0.5); // for Q and K.
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
-        if (protectionSite.contentEquals("-")) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
-        } else if (cleavageFromCTerm) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
-        } else {
-            digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
-        }
+        digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
     public MassTool(int missedCleavage, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling, String bracketStyle) {
@@ -395,13 +389,7 @@ public class MassTool {
         massTable.put('$', (massTable.get('Q') + massTable.get('K')) * 0.5); // for Q and K.
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
-        if (protectionSite.contentEquals("-")) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
-        } else if (cleavageFromCTerm) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
-        } else {
-            digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
-        }
+        digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
     public static boolean isAA(char aa) {
@@ -668,6 +656,18 @@ public class MassTool {
         }
 
         return xcorr * 0.005;
+    }
+
+    public static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+        Pattern digestSitePattern;
+        if (protectionSite.contentEquals("-")) {
+            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
+        } else if (cleavageFromCTerm) {
+            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
+        } else {
+            digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
+        }
+        return digestSitePattern;
     }
 
     private Map<Integer, List<int[]>> digestTrypsin(String proteinSequence) {
