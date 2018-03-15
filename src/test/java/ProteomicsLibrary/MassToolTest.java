@@ -62,7 +62,9 @@ public class MassToolTest {
         Set<String> result = mass_tool_obj.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
         Set<String> ground_truth = new HashSet<>();
         ground_truth.add("nMRc");
+        ground_truth.add("nRc");
         ground_truth.add("nMRGFASSASRc");
+        ground_truth.add("nRGFASSASRc");
         ground_truth.add("nGFASSASRIATAAAASKPSLNASTSVNPKc");
         ground_truth.add("nIATAAAASKPSLNASTSVNPKc");
         ground_truth.add("nIATAAAASKPSLNASTSVNPKLSKc");
@@ -80,13 +82,16 @@ public class MassToolTest {
         result = mass_tool_obj.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
         ground_truth = new HashSet<>();
         ground_truth.add("nMRc");
+        ground_truth.add("nRc");
         ground_truth.add("nIATAAAASKPSLNASTSVNPKc");
         ground_truth.add("nMRGFASSASRc");
+        ground_truth.add("nRGFASSASRc");
         ground_truth.add("nGFASSASRIATAAAASKPSLNASTSVNPKc");
         ground_truth.add("nIATAAAASKPSLNASTSVNPKLSKc");
         ground_truth.add("nLSKTMDYMRc");
         ground_truth.add("nVFKTYc");
         ground_truth.add("nMRGFASSASRIATAAAASKPSLNASTSVNPKc");
+        ground_truth.add("nRGFASSASRIATAAAASKPSLNASTSVNPKc");
         ground_truth.add("nGFASSASRIATAAAASKPSLNASTSVNPKLSKc");
         ground_truth.add("nIATAAAASKPSLNASTSVNPKLSKTMDYMRc");
         ground_truth.add("nLSKTMDYMRIFSVFVVTLWIIRc");

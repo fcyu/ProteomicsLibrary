@@ -599,6 +599,39 @@ public class MassTool {
                 }
             }
         }
+
+        if (proteinSequence.startsWith("M")) {
+            String newSequence = proteinSequence.substring(1);
+            digestRangeMap = digestTrypsin(newSequence);
+
+            for (int i = 0; i <= missedCleavage; ++i) {
+                int[] digestRange1 = digestRangeMap.get(i).get(0);
+                String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
+                if (linkerType == 1 && subString.substring(0, subString.length() - 1).contains("K")) {
+                    chainSequenceSet.add("n" + subString + "c");
+                } else if (linkerType == 2 && subString.substring(0, subString.length() - 1).contains("C")) {
+                    chainSequenceSet.add("n" + subString + "c");
+                }
+
+                if (digestRange1[1] == newSequence.length()) {
+                    // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
+                    if (linkerType == 1 && subString.contains("K")) {
+                        chainSequenceSet.add("n" + subString + "c");
+                    } else if (linkerType == 2 && subString.contains("C")) {
+                        chainSequenceSet.add("n" + subString + "c");
+                    }
+                }
+
+                if (linkerType == 1) {
+                    // Add N-term peptide
+                    if (digestRangeMap.get(i).size() > 0) {
+                        int[] digestRange = digestRangeMap.get(i).get(0);
+                        subString = newSequence.substring(digestRange[0], digestRange[1]);
+                        chainSequenceSet.add("n" + subString + "c");
+                    }
+                }
+            }
+        }
         return chainSequenceSet;
     }
 
