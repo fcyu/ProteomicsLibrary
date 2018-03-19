@@ -11,8 +11,37 @@ public class MassTool {
 
     private static final Pattern modAAPattern = Pattern.compile("([A-Znc])(\\(([0-9.\\-]+)\\))?");
     private static final Pattern modAAPattern2 = Pattern.compile("([A-Znc])(\\[([0-9.\\-]+)\\])?");
+
     public static final double PROTON = 1.00727646688;
     public static final double C13_DIFF = 1.00335483;
+    public static final double N1514_DIFF = 15.0001088 - 14.0030732;
+    public static final Map<Character, Double> n1514DiffMap = new HashMap<>(); // This map only contains amino acids. The PTM different are considered in the identification (PIPI).
+    static {
+        n1514DiffMap.put('G', N1514_DIFF);
+        n1514DiffMap.put('A', N1514_DIFF);
+        n1514DiffMap.put('S', N1514_DIFF);
+        n1514DiffMap.put('P', N1514_DIFF);
+        n1514DiffMap.put('V', N1514_DIFF);
+        n1514DiffMap.put('T', N1514_DIFF);
+        n1514DiffMap.put('C', N1514_DIFF);
+        n1514DiffMap.put('I', N1514_DIFF);
+        n1514DiffMap.put('L', N1514_DIFF);
+        n1514DiffMap.put('N', N1514_DIFF * 2);
+        n1514DiffMap.put('D', N1514_DIFF);
+        n1514DiffMap.put('Q', N1514_DIFF * 2);
+        n1514DiffMap.put('K', N1514_DIFF * 2);
+        n1514DiffMap.put('E', N1514_DIFF);
+        n1514DiffMap.put('M', N1514_DIFF);
+        n1514DiffMap.put('H', N1514_DIFF * 3);
+        n1514DiffMap.put('F', N1514_DIFF);
+        n1514DiffMap.put('R', N1514_DIFF * 4);
+        n1514DiffMap.put('Y', N1514_DIFF);
+        n1514DiffMap.put('W', N1514_DIFF * 2);
+        n1514DiffMap.put('U', N1514_DIFF);
+        n1514DiffMap.put('O', N1514_DIFF * 3);
+        n1514DiffMap.put('n', 0d);
+        n1514DiffMap.put('c', 0d);
+    }
 
     public final double H2O;
 
