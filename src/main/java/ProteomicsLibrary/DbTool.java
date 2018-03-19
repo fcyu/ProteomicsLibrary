@@ -269,4 +269,18 @@ public class DbTool {
     public static String getSequenceOnly(String peptide) {
         return peptide.replaceAll("[^A-Z]+", "");
     }
+
+    public static String getCLPtmFreePeptide(String peptide, String bracketStyle) {
+        if (bracketStyle.contentEquals("()")) {
+            return peptide.replaceAll("\\([^A-Znc()]+\\)", "");
+        } else if (bracketStyle.contentEquals("[]")) {
+            return peptide.replaceAll("\\[[^A-Znc\\[\\]]+\\]", "");
+        } else {
+            throw new NullPointerException(String.format(Locale.US, "Don't support the bracket style %s", bracketStyle));
+        }
+    }
+
+    public static String getCLSequenceOnly(String peptide, String bracketStyle) {
+        return getCLPtmFreePeptide(peptide, bracketStyle).replaceAll("[nc]", "");
+    }
 }

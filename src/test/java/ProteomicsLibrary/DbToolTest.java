@@ -126,4 +126,30 @@ public class DbToolTest {
             System.exit(1);
         }
     }
+
+    @Test
+    public void getCLPtmFreePeptide() {
+        String peptide = "n(34.063)KYGSGGAc-1-n(34.063)IINEPTAAAIAYGLDKK(-34.063)c-16";
+        String result = DbTool.getCLPtmFreePeptide(peptide, "()");
+        String groundTruth = "nKYGSGGAc-1-nIINEPTAAAIAYGLDKKc-16";
+        assertEquals(result, groundTruth);
+
+        peptide = "n[34.063]KYGSGGAc-1-n[34.063]IINEPTAAAIAYGLDKK[-34.063]c-16";
+        result = DbTool.getCLPtmFreePeptide(peptide, "[]");
+        groundTruth = "nKYGSGGAc-1-nIINEPTAAAIAYGLDKKc-16";
+        assertEquals(result, groundTruth);
+    }
+
+    @Test
+    public void getCLSequenceOnly() {
+        String peptide = "n(34.063)KYGSGGAc-1-n(34.063)IINEPTAAAIAYGLDKK(-34.063)c-16";
+        String result = DbTool.getCLSequenceOnly(peptide, "()");
+        String groundTruth = "KYGSGGA-1-IINEPTAAAIAYGLDKK-16";
+        assertEquals(result, groundTruth);
+
+        peptide = "n[34.063]KYGSGGAc-1-n[34.063]IINEPTAAAIAYGLDKK[-34.063]c-16";
+        result = DbTool.getCLSequenceOnly(peptide, "[]");
+        groundTruth = "KYGSGGA-1-IINEPTAAAIAYGLDKK-16";
+        assertEquals(result, groundTruth);
+    }
 }
