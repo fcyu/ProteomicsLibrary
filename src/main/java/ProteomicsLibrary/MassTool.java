@@ -623,7 +623,7 @@ public class MassTool {
             }
             if (linkerType == 1) {
                 // Add N-term peptide
-                if (digestRangeMap.get(i).size() > 0) {
+                if (!digestRangeMap.get(i).isEmpty()) {
                     int[] digestRange = digestRangeMap.get(i).get(0);
                     String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
                     chainSequenceSet.add("n" + subString + "c");
@@ -655,10 +655,10 @@ public class MassTool {
 
                 if (linkerType == 1) {
                     // Add N-term peptide
-                    if (digestRangeMap.get(i).size() > 0) {
                         int[] digestRange = digestRangeMap.get(i).get(0);
                         subString = newSequence.substring(digestRange[0], digestRange[1]);
                         chainSequenceSet.add("n" + subString + "c");
+                        if (!digestRangeMap.get(i).isEmpty()) {
                     }
                 }
             }
