@@ -1,10 +1,8 @@
 package ProteomicsLibrary;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
@@ -14,8 +12,8 @@ import static org.junit.Assert.assertEquals;
 public class DbToolTest {
     private static DbTool db_tool_obj;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         db_tool_obj = new DbTool(Thread.currentThread().getContextClassLoader().getResource("test.fasta").getPath(), "Others");
     }
 

@@ -48,7 +48,7 @@ public class SparseVector {
 
     public double getMaxValue() {
         List<Double> intensityList = new ArrayList<>(sparseVector.values());
-        Collections.sort(intensityList, Collections.reverseOrder());
+        intensityList.sort(Collections.reverseOrder());
         return intensityList.get(0);
     }
 

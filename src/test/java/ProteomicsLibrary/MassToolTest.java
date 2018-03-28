@@ -1,6 +1,6 @@
 package ProteomicsLibrary;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import ProteomicsLibrary.Types.*;
 
@@ -13,8 +13,8 @@ public class MassToolTest {
 
     private static Map<Character, Double> fix_mod_map = new HashMap<>();
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         fix_mod_map.put('G', 0d);
         fix_mod_map.put('A', 0d);
         fix_mod_map.put('S', 0d);
