@@ -8,7 +8,7 @@ public class SparseVector {
 
     public SparseVector(Map<Integer, Double> sparseVector) {
         for (int i : sparseVector.keySet()) {
-            sparseVector.put(i, sparseVector.get(i));
+            this.sparseVector.put(i, sparseVector.get(i));
         }
     }
 
