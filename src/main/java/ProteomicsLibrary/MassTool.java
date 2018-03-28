@@ -480,7 +480,7 @@ public class MassTool {
             }
             temp.add(new AA(aa, deltaMass));
         }
-        return temp.toArray(new AA[temp.size()]);
+        return temp.toArray(new AA[0]);
     }
 
     public Set<String> buildPeptideSet(String proteinSequence) {

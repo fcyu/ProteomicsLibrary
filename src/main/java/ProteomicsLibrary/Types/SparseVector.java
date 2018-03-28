@@ -43,7 +43,7 @@ public class SparseVector {
     }
 
     public Double[] getValues() {
-        return sparseVector.values().toArray(new Double[sparseVector.size()]);
+        return sparseVector.values().toArray(new Double[0]);
     }
 
     public double getMaxValue() {

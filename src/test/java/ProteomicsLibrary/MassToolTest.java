@@ -71,9 +71,9 @@ public class MassToolTest {
         ground_truth.add("nLSKTMDYMRc");
         ground_truth.add("nVFKTYc");
 
-        String[] groundTruthArray = ground_truth.toArray(new String[ground_truth.size()]);
+        String[] groundTruthArray = ground_truth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
-        String[] resultArray = result.toArray(new String[result.size()]);
+        String[] resultArray = result.toArray(new String[0]);
         Arrays.sort(resultArray);
         assertArrayEquals(groundTruthArray, resultArray);
 
@@ -97,9 +97,9 @@ public class MassToolTest {
         ground_truth.add("nLSKTMDYMRIFSVFVVTLWIIRc");
         ground_truth.add("nVDARVFKTYc");
 
-        groundTruthArray = ground_truth.toArray(new String[ground_truth.size()]);
+        groundTruthArray = ground_truth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
-        resultArray = result.toArray(new String[result.size()]);
+        resultArray = result.toArray(new String[0]);
         Arrays.sort(resultArray);
         assertArrayEquals(groundTruthArray, resultArray);
     }
@@ -133,9 +133,9 @@ public class MassToolTest {
         groundTruth.add("nDEDRDDKPSSDKKc");
         groundTruth.add("nDDKPSSDKKDFc");
 
-        String[] resultArray = result.toArray(new String[result.size()]);
+        String[] resultArray = result.toArray(new String[0]);
         Arrays.sort(resultArray);
-        String[] groundTruthArray = groundTruth.toArray(new String[groundTruth.size()]);
+        String[] groundTruthArray = groundTruth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
 
         assertArrayEquals(resultArray, groundTruthArray);

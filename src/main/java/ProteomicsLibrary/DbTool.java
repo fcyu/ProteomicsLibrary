@@ -139,7 +139,7 @@ public class DbTool {
         }
         char[] tempArray = sequenceToBeShuffled.toCharArray();
         int time = 0;
-        Integer[] cutSiteArray = cutSiteSet.toArray(new Integer[cutSiteSet.size()]);
+        Integer[] cutSiteArray = cutSiteSet.toArray(new Integer[0]);
         Arrays.sort(cutSiteArray);
 
         // shuffling in each cut range.

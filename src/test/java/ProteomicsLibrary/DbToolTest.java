@@ -35,9 +35,9 @@ public class DbToolTest {
         Set<Integer> groundTruth = new HashSet<>();
         groundTruth.add(0);
         assertEquals(result.size(), groundTruth.size());
-        Integer[] resultArray = result.toArray(new Integer[result.size()]);
+        Integer[] resultArray = result.toArray(new Integer[0]);
         Arrays.sort(resultArray);
-        Integer[] groundTruthArray = groundTruth.toArray(new Integer[groundTruth.size()]);
+        Integer[] groundTruthArray = groundTruth.toArray(new Integer[0]);
         Arrays.sort(groundTruthArray);
         for (int i = 0; i < resultArray.length; ++i) {
             assertEquals(resultArray[i], groundTruthArray[i]);
