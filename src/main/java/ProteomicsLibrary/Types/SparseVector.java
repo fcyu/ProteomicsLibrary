@@ -77,6 +77,10 @@ public class SparseVector {
         return output;
     }
 
+    public boolean isEmpty() {
+        return sparseVector.isEmpty();
+    }
+
     public Map<Integer, Double> getVectorMap() {
         return sparseVector;
     }
