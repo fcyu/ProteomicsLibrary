@@ -1,0 +1,3 @@
+>nxp:NX_A0A075B6H9-1 \DbUniqueId=NX_A0A075B6H9-1 \PName=Immunoglobulin lambda variable 4-69 isoform Iso 1 \GName=IGLV4-69 \NcbiTaxId=9606 \TaxName=Homo Sapiens \Length=119 \SV=1 \EV=21 \PE=1 \ModRes=(42||Disulfide)(112||Disulfide) \ModResPsi=(318|MOD:00115|S-palmitoyl-L-cysteine)(325|MOD:00115|S-palmitoyl-L-cysteine)  \VariantSimple=(3|*)(8|L)(12|F)(12|P) \VariantComplex=(11|11|)(24|24|LLSPEDFCKVGWIM)(89|90|)(118|119|)(118|119|GMARWALT*VLTFVGH) \Processed=(1|20|signal peptide)(21|119|mature protein)
+MAWTPLLFLTLLLHCTGSLSQLVLTQSPSASASLGASVKLTCTLSSGHSSYAIAWHQQQP
+EKGPRYLMKLNSDGSHSKGDGIPDRFSGSSSGAERYLTISSLQSEDEADYYCQTWGTGI
