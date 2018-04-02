@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class BuildIndex {
 
-    Multimap<String, String> targetPeptideProteinMap = HashMultimap.create();
+    private Multimap<String, String> targetPeptideProteinMap = HashMultimap.create();
 
     public BuildIndex(Map<String, String> proteinSequenceMap, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, int missedCleavage) {
         MassTool massTool = new MassTool(missedCleavage, cleavageSite, protectionSite, cleavageFromCTerm, 0.02, 1, "N14", "()");
