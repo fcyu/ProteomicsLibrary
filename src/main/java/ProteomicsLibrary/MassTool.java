@@ -450,7 +450,7 @@ public class MassTool {
         return totalMass;
     }
 
-    public double calResidueMass2(String sequence) { // n and c are also AA. Don't consider fixed modification
+    public double calResidueMass2(String sequence) { // n and c are also AA. Don't consider fixed modification automatically
         double totalMass = 0;
         Matcher matcher = getAAMatcher(sequence, bracketStyle);
         while (matcher.find()) {
@@ -459,11 +459,7 @@ public class MassTool {
             if (matcher.group(3) != null) {
                 deltaMass = Double.valueOf(matcher.group(3));
             }
-            if (Math.abs(fixModMap.get(aa) - deltaMass) < 0.01) {
-                totalMass += massTable.get(aa);
-            } else {
-                totalMass += massTable.get(aa) + deltaMass;
-            }
+            totalMass += massTable.get(aa) - fixModMap.get(aa) + deltaMass;
         }
 
         return totalMass;
