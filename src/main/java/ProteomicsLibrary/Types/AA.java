@@ -1,5 +1,7 @@
 package ProteomicsLibrary.Types;
 
+import java.util.Locale;
+
 public class AA {
 
     public char aa;
@@ -31,5 +33,13 @@ public class AA {
 
     public AA clone() {
         return new AA(aa, ptmDeltaMass);
+    }
+
+    public String toString() {
+        if (hasMod()) {
+            return String.format(Locale.US, "%c(%.3f)", aa, ptmDeltaMass);
+        } else {
+            return String.valueOf(aa);
+        }
     }
 }

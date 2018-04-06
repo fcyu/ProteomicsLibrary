@@ -38,4 +38,14 @@ public class AATest {
         assertNotEquals(aa12, aa1);
         assertNotEquals(aa13, aa1);
     }
+
+    @Test
+    public void testToString() {
+        assertEquals("A", (new AA('A', 0)).toString());
+        assertEquals("B(2.100)", (new AA('B', 2.1)).toString());
+        assertEquals("C", (new AA('C', 0.01)).toString());
+        assertEquals("D(-2.335)", (new AA('D', -2.33462)).toString());
+        assertEquals("E(3.222)", (new AA('E', 3.2219)).toString());
+        assertEquals("F(6.333)", (new AA('F', 6.3331)).toString());
+    }
 }
