@@ -49,6 +49,12 @@ public class MassToolTest {
     }
 
     @Test
+    public void calResidueMass2() throws Exception {
+        MassTool massTool = new MassTool(1, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
+        assertEquals(2376.11438353312, massTool.calResidueMass2("nGASPVTCILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVT(1.0)CILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVTC(1.0)ILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2433.13584353312, massTool.calResidueMass2("nGASPVTC(57.02146)ILNDQKEMHFRYWc"), 0.001);
     }
 
     @Test
@@ -153,6 +159,49 @@ public class MassToolTest {
         assertArrayEquals(groundTruth, result);
     }
 
+    @Test
+    public void isAA() {
+        assertTrue(MassTool.isAA('A'));
+        assertFalse(MassTool.isAA('B'));
+        assertFalse(MassTool.isAA('-'));
+        assertFalse(MassTool.isAA('Z'));
+        assertTrue(MassTool.isAA('K'));
+    }
+
+    @Test
+    public void containsNonAAAndNC() {
+        assertFalse(MassTool.containsNonAAAndNC("ACDS"));
+        assertTrue(MassTool.containsNonAAAndNC(".SDS"));
+        assertTrue(MassTool.containsNonAAAndNC("XSD"));
+        assertTrue(MassTool.containsNonAAAndNC("*"));
+        assertFalse(MassTool.containsNonAAAndNC("nSDEc"));
+    }
+
+    @Test
+    public void binToMz() {
+        MassTool massTool = new MassTool(1, "KR", "P", true, 0.5, 0.6, "N14");
+        assertEquals(1.4, massTool.binToMz(2), 1e-6);
+        assertEquals(-0.6, massTool.binToMz(0), 1e-6);
+        assertEquals(0.4, massTool.binToMz(1), 1e-6);
+    }
+
+    @Test
+    public void getLabelling() {
+        MassTool massTool = new MassTool(1, "KR", "P", true, 0.5, 0.6, "N14");
+        assertEquals("N14", massTool.getLabelling());
+        massTool = new MassTool(1, "KR", "P", true, 0.5, 0.6, "N15");
+        assertEquals("N15", massTool.getLabelling());
+    }
+
+    @Test
+    public void getDigestSitePattern() {
+        MassTool massTool = new MassTool(1, "KR", "P", true, 0.5, 0.6, "N14");
+        assertEquals(Pattern.compile("[KR](?![P])").toString(), massTool.getDigestSitePattern().toString());
+        massTool = new MassTool(1, "KR", "P", false, 0.5, 0.6, "N14");
+        assertEquals(Pattern.compile("(?<![P])[KR]").toString(), massTool.getDigestSitePattern().toString());
+        massTool = new MassTool(1, "K", "-", true, 0.5, 0.6, "N14");
+        assertEquals(Pattern.compile("[K]").toString(), massTool.getDigestSitePattern().toString());
+    }
     @Test
     public void unifyPeptide() throws Exception {
         assertEquals("nSDFSDSc", MassTool.unifyPeptide("A.SDFSDS.S"));

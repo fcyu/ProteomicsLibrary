@@ -425,8 +425,7 @@ public class MassTool {
     }
 
     public static boolean containsNonAAAndNC(String sequence) {
-        char[] charArray = sequence.toCharArray();
-        for (char aa : charArray) {
+        for (char aa : sequence.toCharArray()) {
             if (!(aa == 'H' || aa == 'I' || aa == 'L' || aa == 'K' || aa == 'M' || aa == 'F' || aa == 'T' || aa == 'W' || aa == 'V' || aa == 'R' || aa == 'C' || aa == 'Q' || aa == 'G' || aa == 'P' || aa == 'Y' || aa == 'A' || aa == 'D' || aa == 'N' || aa == 'E' || aa == 'S' || aa == 'U' || aa == 'O' || aa == 'n' || aa == 'c')) {
                 return true;
             }
@@ -600,6 +599,19 @@ public class MassTool {
         }
         return sb.toString();
     }
+
+    public static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+        Pattern digestSitePattern;
+        if (protectionSite.contentEquals("-")) {
+            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
+        } else if (cleavageFromCTerm) {
+            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
+        } else {
+            digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
+        }
+        return digestSitePattern;
+    }
+
     public static String getBracketStyle(String peptide) throws Exception {
         if (!containsNonAAAndNC(peptide)) {
             return "()";
@@ -747,18 +759,6 @@ public class MassTool {
         }
 
         return xcorr * 0.005;
-    }
-
-    public static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
-        Pattern digestSitePattern;
-        if (protectionSite.contentEquals("-")) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
-        } else if (cleavageFromCTerm) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
-        } else {
-            digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
-        }
-        return digestSitePattern;
     }
     // End of cross-linking part
 
