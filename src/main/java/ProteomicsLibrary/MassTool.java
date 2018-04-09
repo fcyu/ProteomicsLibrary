@@ -504,7 +504,7 @@ public class MassTool {
         return peptideSeqSet;
     }
 
-    public double[][] buildIonArray(String squence, int maxCharge) {
+    public double[][] buildIonArray(String sequence, int maxCharge) throws Exception { // there are n and c in the sequence
         AA[] aaArray = seqToAAList(sequence);
 
         double[] inverseChargeArray = new double[maxCharge];
@@ -591,9 +591,6 @@ public class MassTool {
         return digestSitePattern;
     }
 
-    /*
-    Cross-linking part
-     */
 
     public static String unifyPeptide(String peptide) throws Exception {
         AA[] aaArray = seqToAAList(deleteLeftRightFlankingAddNC(peptide));
@@ -615,6 +612,7 @@ public class MassTool {
         }
     }
 
+    // Cross-linking part
     public Set<String> buildChainSet(String proteinSequence, short linkerType) {
         Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proteinSequence);
         Set<String> chainSequenceSet = new HashSet<>();
@@ -762,6 +760,7 @@ public class MassTool {
         }
         return digestSitePattern;
     }
+    // End of cross-linking part
 
     private Map<Integer, List<int[]>> digestTrypsin(String proteinSequence) {
         // Cut a protein
