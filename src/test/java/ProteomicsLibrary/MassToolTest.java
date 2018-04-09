@@ -152,4 +152,20 @@ public class MassToolTest {
         groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
         assertArrayEquals(groundTruth, result);
     }
+
+    @Test
+    public void unifyPeptide() throws Exception {
+        assertEquals("nSDFSDSc", MassTool.unifyPeptide("A.SDFSDS.S"));
+        assertEquals("nS(11.320)DFSDSc", MassTool.unifyPeptide("-.S[11.320233]DFSDS.S"));
+        assertEquals("nSDFSDSc", MassTool.unifyPeptide("SDFSDS.S"));
+        assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF(-23.231)SDS.S"));
+        assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF[-23.231]SDS.-"));
+    }
+
+    @Test(expected = Exception.class)
+    public void unifyPeptide2() throws Exception {
+        assertEquals("nS(11.320)DFSDSc", MassTool.unifyPeptide("-.S[11.320233)DFSDS.S"));
+        assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF[-23.231)SDS.S"));
+        assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF{-23.231}SDS.-"));
+    }
 }

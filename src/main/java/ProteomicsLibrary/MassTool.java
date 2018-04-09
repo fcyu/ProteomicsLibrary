@@ -11,6 +11,8 @@ public class MassTool {
 
     private static final Pattern modAAPattern = Pattern.compile("([A-Znc])(\\(([0-9.\\-]+)\\))?");
     private static final Pattern modAAPattern2 = Pattern.compile("([A-Znc])(\\[([0-9.\\-]+)\\])?");
+    private static final Pattern leftFlankPattern = Pattern.compile("^[A-Z-]\\.");
+    private static final Pattern rightFlankPattern = Pattern.compile("\\.[A-Z-]$");
 
     public static final double PROTON = 1.00727646688;
     public static final double C13_DIFF = 1.00335483;
@@ -592,6 +594,15 @@ public class MassTool {
     /*
     Cross-linking part
      */
+
+    public static String unifyPeptide(String peptide) throws Exception {
+        AA[] aaArray = seqToAAList(deleteLeftRightFlankingAddNC(peptide));
+        StringBuilder sb = new StringBuilder();
+        for (AA aa : aaArray) {
+            sb.append(aa.toString());
+        }
+        return sb.toString();
+    }
     public static String getBracketStyle(String peptide) throws Exception {
         if (!containsNonAAAndNC(peptide)) {
             return "()";
@@ -805,5 +816,17 @@ public class MassTool {
             throw new NullPointerException(String.format(Locale.US, "The bracket style does not support %s. It only supports [] and ().", bracketStyle));
         }
         return matcher;
+    }
+
+    private static String deleteLeftRightFlankingAddNC(String peptide) {
+        peptide = leftFlankPattern.matcher(peptide).replaceAll("");
+        peptide = rightFlankPattern.matcher(peptide).replaceAll("");
+        if (!peptide.startsWith("n")) {
+            peptide = "n" + peptide;
+        }
+        if (!peptide.endsWith("c")) {
+            peptide = peptide + "c";
+        }
+        return peptide;
     }
 }
