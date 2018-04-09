@@ -152,27 +152,27 @@ public class DbToolTest {
     }
 
     @Test
-    public void getCLPtmFreePeptide() {
+    public void getCLPtmFreePeptide() throws Exception {
         String peptide = "n(34.063)KYGSGGAc-1-n(34.063)IINEPTAAAIAYGLDKK(-34.063)c-16";
-        String result = DbTool.getCLPtmFreePeptide(peptide, "()");
+        String result = DbTool.getCLPtmFreePeptide(peptide);
         String groundTruth = "nKYGSGGAc-1-nIINEPTAAAIAYGLDKKc-16";
         assertEquals(groundTruth, result);
 
         peptide = "n[34.063]KYGSGGAc-1-n[34.063]IINEPTAAAIAYGLDKK[-34.063]c-16";
-        result = DbTool.getCLPtmFreePeptide(peptide, "[]");
+        result = DbTool.getCLPtmFreePeptide(peptide);
         groundTruth = "nKYGSGGAc-1-nIINEPTAAAIAYGLDKKc-16";
         assertEquals(groundTruth, result);
     }
 
     @Test
-    public void getCLSequenceOnly() {
+    public void getCLSequenceOnly() throws Exception {
         String peptide = "n(34.063)KYGSGGAc-1-n(34.063)IINEPTAAAIAYGLDKK(-34.063)c-16";
-        String result = DbTool.getCLSequenceOnly(peptide, "()");
+        String result = DbTool.getCLSequenceOnly(peptide);
         String groundTruth = "KYGSGGA-1-IINEPTAAAIAYGLDKK-16";
         assertEquals(groundTruth, result);
 
         peptide = "n[34.063]KYGSGGAc-1-n[34.063]IINEPTAAAIAYGLDKK[-34.063]c-16";
-        result = DbTool.getCLSequenceOnly(peptide, "[]");
+        result = DbTool.getCLSequenceOnly(peptide);
         groundTruth = "KYGSGGA-1-IINEPTAAAIAYGLDKK-16";
         assertEquals(groundTruth, result);
     }

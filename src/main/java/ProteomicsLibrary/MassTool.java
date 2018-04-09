@@ -54,12 +54,10 @@ public class MassTool {
     private final Pattern digestSitePattern;
     private final boolean cleavageFromCTerm;
     private final String labelling;
-    private final String bracketStyle;
     private final Map<Character, Double> fixModMap;
 
-    public MassTool(int missedCleavage, Map<Character, Double> fixModMap, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling, String bracketStyle) {
+    public MassTool(int missedCleavage, Map<Character, Double> fixModMap, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
         this.labelling = labelling;
-        this.bracketStyle = bracketStyle;
         this.fixModMap = fixModMap;
 
         elementTable.put("-", 0d);
@@ -226,9 +224,8 @@ public class MassTool {
         digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
-    public MassTool(int missedCleavage, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling, String bracketStyle) {
+    public MassTool(int missedCleavage, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
         this.labelling = labelling;
-        this.bracketStyle = bracketStyle;
 
         // build a default fixModMap;
         this.fixModMap = new HashMap<>();
@@ -435,9 +432,9 @@ public class MassTool {
         return false;
     }
 
-    public double calResidueMass(String sequence) { // n and c are also AA. Consider fixed modification automatically
+    public double calResidueMass(String sequence) throws Exception { // n and c are also AA. Consider fixed modification automatically
         double totalMass = 0;
-        Matcher matcher = getAAMatcher(sequence, bracketStyle);
+        Matcher matcher = getAAMatcher(sequence);
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
@@ -450,9 +447,9 @@ public class MassTool {
         return totalMass;
     }
 
-    public double calResidueMass2(String sequence) { // n and c are also AA. Don't consider fixed modification automatically
+    public double calResidueMass2(String sequence) throws Exception { // n and c are also AA. Don't consider fixed modification automatically
         double totalMass = 0;
-        Matcher matcher = getAAMatcher(sequence, bracketStyle);
+        Matcher matcher = getAAMatcher(sequence);
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
@@ -465,8 +462,8 @@ public class MassTool {
         return totalMass;
     }
 
-    public static AA[] seqToAAList(String sequence, String bracketStyle) { // n and c are also AA.
-        Matcher matcher = getAAMatcher(sequence, bracketStyle);
+    public static AA[] seqToAAList(String sequence) throws Exception { // n and c are also AA.
+        Matcher matcher = getAAMatcher(sequence);
         List<AA> temp = new LinkedList<>();
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
@@ -506,7 +503,7 @@ public class MassTool {
     }
 
     public double[][] buildIonArray(String squence, int maxCharge) {
-        AA[] aaArray = seqToAAList(squence, bracketStyle);
+        AA[] aaArray = seqToAAList(sequence);
 
         double[] inverseChargeArray = new double[maxCharge];
         for (int charge = 1; charge <= maxCharge; ++charge) {
@@ -595,6 +592,18 @@ public class MassTool {
     /*
     Cross-linking part
      */
+    public static String getBracketStyle(String peptide) throws Exception {
+        if (!containsNonAAAndNC(peptide)) {
+            return "()";
+        } else if (peptide.contains("(") && peptide.contains(")") && !peptide.contains("[") && !peptide.contains("]")) {
+            return "()";
+        } else if (!peptide.contains("(") && !peptide.contains(")") && peptide.contains("[") && peptide.contains("]")) {
+            return "[]";
+        } else {
+            throw new Exception(String.format(Locale.US, "Cannot recognize the bracket style from peptide %s.", peptide));
+        }
+    }
+
     public Set<String> buildChainSet(String proteinSequence, short linkerType) {
         Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proteinSequence);
         Set<String> chainSequenceSet = new HashSet<>();
@@ -664,7 +673,7 @@ public class MassTool {
         return chainSequenceSet;
     }
 
-    public double generateTheoFragmentAndCalXCorr(String sequence, short linkSite, double additionalMass, int precursorCharge, SparseVector xcorrPL) {
+    public double generateTheoFragmentAndCalXCorr(String sequence, short linkSite, double additionalMass, int precursorCharge, SparseVector xcorrPL) throws Exception { // there are n and c in the sequence
         linkSite = (short) Math.max(1, linkSite);
 
         int localMaxCharge = Math.min(6, Math.max(precursorCharge - 1, 1));
@@ -673,7 +682,7 @@ public class MassTool {
             inverseChargeArray[charge - 1] = (double) 1 / (double) charge;
         }
 
-        AA[] aaArray = seqToAAList(sequence, bracketStyle);
+        AA[] aaArray = seqToAAList(sequence);
 
         double xcorr = 0;
 
@@ -785,7 +794,8 @@ public class MassTool {
         return digestRangeMap;
     }
 
-    private static Matcher getAAMatcher(String sequence, String bracketStyle) {
+    private static Matcher getAAMatcher(String sequence) throws Exception {
+        String bracketStyle = getBracketStyle(sequence);
         Matcher matcher;
         if (bracketStyle.contentEquals("[]")) {
             matcher = modAAPattern2.matcher(sequence);

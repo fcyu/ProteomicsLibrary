@@ -270,17 +270,19 @@ public class DbTool {
         return peptide.replaceAll("[^A-Z]+", "");
     }
 
-    public static String getCLPtmFreePeptide(String peptide, String bracketStyle) {
+    public static String getCLPtmFreePeptide(String peptide) throws Exception {
+        String bracketStyle = MassTool.getBracketStyle(peptide);
         if (bracketStyle.contentEquals("()")) {
             return peptide.replaceAll("\\([^A-Znc()]+\\)", "");
         } else if (bracketStyle.contentEquals("[]")) {
             return peptide.replaceAll("\\[[^A-Znc\\[\\]]+\\]", "");
         } else {
-            throw new NullPointerException(String.format(Locale.US, "Don't support the bracket style %s", bracketStyle));
+            return peptide;
         }
     }
 
-    public static String getCLSequenceOnly(String peptide, String bracketStyle) {
-        return getCLPtmFreePeptide(peptide, bracketStyle).replaceAll("[nc]", "");
+    public static String getCLSequenceOnly(String peptide) throws Exception {
+        return getCLPtmFreePeptide(peptide).replaceAll("[nc]", "");
+    }
     }
 }

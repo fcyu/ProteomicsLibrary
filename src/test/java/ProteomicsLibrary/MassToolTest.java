@@ -43,8 +43,8 @@ public class MassToolTest {
     }
 
     @Test
-    public void calResidueMass() {
-        MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
+    public void calResidueMass() throws Exception {
+        MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         assertEquals(2503.1357421875, massTool.calResidueMass("nGASPVTCILNDQKEMHFRYWc"), 0.001);
     }
 
@@ -53,7 +53,7 @@ public class MassToolTest {
 
     @Test
     public void mzToBin() {
-        MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
+        MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         assertEquals(11, massTool.mzToBin(11), 1e-6);
         assertEquals(0, massTool.mzToBin(0), 1e-6);
         assertEquals(-5, massTool.mzToBin(-5), 1e-6);
@@ -62,7 +62,7 @@ public class MassToolTest {
     @Test
     public void buildChainSet() {
         // 1 missed-cleavage, N-term linkable
-        MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
+        MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         Set<String> result = massTool.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
         Set<String> groundTruth = new HashSet<>();
         groundTruth.add("nMRc");
@@ -82,7 +82,7 @@ public class MassToolTest {
         assertArrayEquals(groundTruthArray, resultArray);
 
         // 2 missed-cleavage, N-term linkable
-        massTool = new MassTool(2, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
+        massTool = new MassTool(2, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         result = massTool.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
         groundTruth = new HashSet<>();
         groundTruth.add("nMRc");
@@ -110,7 +110,7 @@ public class MassToolTest {
 
     @Test
     public void buildPeptideSet() {
-        MassTool massTool = new MassTool(2, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14", "()");
+        MassTool massTool = new MassTool(2, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
 
         String proteinSequence = "MSDDFKDEDRDDKPSSDKKDF";
         Set<String> result = massTool.buildPeptideSet(proteinSequence);
@@ -141,14 +141,14 @@ public class MassToolTest {
     }
 
     @Test
-    public void seqToAAList() {
+    public void seqToAAList() throws Exception{
         String seq = "nGHUKc";
-        AA[] result = MassTool.seqToAAList(seq, "[]");
+        AA[] result = MassTool.seqToAAList(seq);
         AA[] groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 0), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
         assertArrayEquals(groundTruth, result);
 
         seq = "nGH[3.02]UKc";
-        result = MassTool.seqToAAList(seq, "[]");
+        result = MassTool.seqToAAList(seq);
         groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
         assertArrayEquals(groundTruth, result);
     }

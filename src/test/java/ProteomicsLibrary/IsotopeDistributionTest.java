@@ -13,7 +13,7 @@ public class IsotopeDistributionTest {
 
     @Before
     public void setUp() {
-        MassTool massTool = new MassTool(2, "KR", "P", true, 0.02, 0, "N14", "()");;
+        MassTool massTool = new MassTool(2, "KR", "P", true, 0.02, 0, "N14");;
         isotopeDistribution = new IsotopeDistribution(massTool.getElementTable(), 0, "N14");
     }
 
