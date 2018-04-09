@@ -152,7 +152,7 @@ public class DbToolTest {
     }
 
     @Test
-    public void getCLPtmFreePeptide() throws Exception {
+    public void getCLPtmFreePeptide() {
         String peptide = "n(34.063)KYGSGGAc-1-n(34.063)IINEPTAAAIAYGLDKK(-34.063)c-16";
         String result = DbTool.getCLPtmFreePeptide(peptide);
         String groundTruth = "nKYGSGGAc-1-nIINEPTAAAIAYGLDKKc-16";
@@ -165,7 +165,7 @@ public class DbToolTest {
     }
 
     @Test
-    public void getCLSequenceOnly() throws Exception {
+    public void getCLSequenceOnly() {
         String peptide = "n(34.063)KYGSGGAc-1-n(34.063)IINEPTAAAIAYGLDKK(-34.063)c-16";
         String result = DbTool.getCLSequenceOnly(peptide);
         String groundTruth = "KYGSGGA-1-IINEPTAAAIAYGLDKK-16";

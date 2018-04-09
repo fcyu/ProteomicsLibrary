@@ -43,13 +43,13 @@ public class MassToolTest {
     }
 
     @Test
-    public void calResidueMass() throws Exception {
+    public void calResidueMass() {
         MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         assertEquals(2503.1357421875, massTool.calResidueMass("nGASPVTCILNDQKEMHFRYWc"), 0.001);
     }
 
     @Test
-    public void calResidueMass2() throws Exception {
+    public void calResidueMass2() {
         MassTool massTool = new MassTool(1, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         assertEquals(2376.11438353312, massTool.calResidueMass2("nGASPVTCILNDQKEMHFRYWc"), 0.001);
         assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVT(1.0)CILNDQKEMHFRYWc"), 0.001);
@@ -147,7 +147,7 @@ public class MassToolTest {
     }
 
     @Test
-    public void seqToAAList() throws Exception{
+    public void seqToAAList() {
         String seq = "nGHUKc";
         AA[] result = MassTool.seqToAAList(seq);
         AA[] groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 0), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
@@ -203,18 +203,11 @@ public class MassToolTest {
         assertEquals(Pattern.compile("[K]").toString(), massTool.getDigestSitePattern().toString());
     }
     @Test
-    public void unifyPeptide() throws Exception {
+    public void unifyPeptide() {
         assertEquals("nSDFSDSc", MassTool.unifyPeptide("A.SDFSDS.S"));
         assertEquals("nS(11.320)DFSDSc", MassTool.unifyPeptide("-.S[11.320233]DFSDS.S"));
         assertEquals("nSDFSDSc", MassTool.unifyPeptide("SDFSDS.S"));
         assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF(-23.231)SDS.S"));
         assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF[-23.231]SDS.-"));
-    }
-
-    @Test(expected = Exception.class)
-    public void unifyPeptide2() throws Exception {
-        assertEquals("nS(11.320)DFSDSc", MassTool.unifyPeptide("-.S[11.320233)DFSDS.S"));
-        assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF[-23.231)SDS.S"));
-        assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF{-23.231}SDS.-"));
     }
 }

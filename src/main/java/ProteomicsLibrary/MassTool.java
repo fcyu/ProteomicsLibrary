@@ -9,8 +9,7 @@ import java.util.regex.Pattern;
 
 public class MassTool {
 
-    private static final Pattern modAAPattern = Pattern.compile("([A-Znc])(\\(([0-9.\\-]+)\\))?");
-    private static final Pattern modAAPattern2 = Pattern.compile("([A-Znc])(\\[([0-9.\\-]+)\\])?");
+    private static final Pattern modAAPattern = Pattern.compile("([A-Znc])([(\\[]([0-9.\\-]+)[)\\]])?");
     private static final Pattern leftFlankPattern = Pattern.compile("^[A-Z-]\\.");
     private static final Pattern rightFlankPattern = Pattern.compile("\\.[A-Z-]$");
 
@@ -433,9 +432,9 @@ public class MassTool {
         return false;
     }
 
-    public double calResidueMass(String sequence) throws Exception { // n and c are also AA. Consider fixed modification automatically
+    public double calResidueMass(String sequence) { // n and c are also AA. Consider fixed modification automatically
         double totalMass = 0;
-        Matcher matcher = getAAMatcher(sequence);
+        Matcher matcher = modAAPattern.matcher(sequence);
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
@@ -448,9 +447,9 @@ public class MassTool {
         return totalMass;
     }
 
-    public double calResidueMass2(String sequence) throws Exception { // n and c are also AA. Don't consider fixed modification automatically
+    public double calResidueMass2(String sequence) { // n and c are also AA. Don't consider fixed modification automatically
         double totalMass = 0;
-        Matcher matcher = getAAMatcher(sequence);
+        Matcher matcher = modAAPattern.matcher(sequence);
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
@@ -463,8 +462,8 @@ public class MassTool {
         return totalMass;
     }
 
-    public static AA[] seqToAAList(String sequence) throws Exception { // n and c are also AA.
-        Matcher matcher = getAAMatcher(sequence);
+    public static AA[] seqToAAList(String sequence) { // n and c are also AA.
+        Matcher matcher = modAAPattern.matcher(sequence);
         List<AA> temp = new LinkedList<>();
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
@@ -503,7 +502,7 @@ public class MassTool {
         return peptideSeqSet;
     }
 
-    public double[][] buildIonArray(String sequence, int maxCharge) throws Exception { // there are n and c in the sequence
+    public double[][] buildIonArray(String sequence, int maxCharge) { // there are n and c in the sequence
         AA[] aaArray = seqToAAList(sequence);
 
         double[] inverseChargeArray = new double[maxCharge];
@@ -591,7 +590,7 @@ public class MassTool {
     }
 
 
-    public static String unifyPeptide(String peptide) throws Exception {
+    public static String unifyPeptide(String peptide) {
         AA[] aaArray = seqToAAList(deleteLeftRightFlankingAddNC(peptide));
         StringBuilder sb = new StringBuilder();
         for (AA aa : aaArray) {
@@ -610,18 +609,6 @@ public class MassTool {
             digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
         }
         return digestSitePattern;
-    }
-
-    public static String getBracketStyle(String peptide) throws Exception {
-        if (!containsNonAAAndNC(peptide)) {
-            return "()";
-        } else if (peptide.contains("(") && peptide.contains(")") && !peptide.contains("[") && !peptide.contains("]")) {
-            return "()";
-        } else if (!peptide.contains("(") && !peptide.contains(")") && peptide.contains("[") && peptide.contains("]")) {
-            return "[]";
-        } else {
-            throw new Exception(String.format(Locale.US, "Cannot recognize the bracket style from peptide %s.", peptide));
-        }
     }
 
     // Cross-linking part
@@ -694,7 +681,7 @@ public class MassTool {
         return chainSequenceSet;
     }
 
-    public double generateTheoFragmentAndCalXCorr(String sequence, short linkSite, double additionalMass, int precursorCharge, SparseVector xcorrPL) throws Exception { // there are n and c in the sequence
+    public double generateTheoFragmentAndCalXCorr(String sequence, short linkSite, double additionalMass, int precursorCharge, SparseVector xcorrPL) { // there are n and c in the sequence
         linkSite = (short) Math.max(1, linkSite);
 
         int localMaxCharge = Math.min(6, Math.max(precursorCharge - 1, 1));
@@ -802,19 +789,6 @@ public class MassTool {
         }
 
         return digestRangeMap;
-    }
-
-    private static Matcher getAAMatcher(String sequence) throws Exception {
-        String bracketStyle = getBracketStyle(sequence);
-        Matcher matcher;
-        if (bracketStyle.contentEquals("[]")) {
-            matcher = modAAPattern2.matcher(sequence);
-        } else if (bracketStyle.contentEquals("()")) {
-            matcher = modAAPattern.matcher(sequence);
-        } else {
-            throw new NullPointerException(String.format(Locale.US, "The bracket style does not support %s. It only supports [] and ().", bracketStyle));
-        }
-        return matcher;
     }
 
     private static String deleteLeftRightFlankingAddNC(String peptide) {
