@@ -20,17 +20,25 @@ public class Binomial {
         if (k > N) {
             throw new Exception(String.format(Locale.US, "k = %d is larger than N = %d", k, N));
         }
-        if (N <= 0 || k < 0) {
+        if (N < 0 || k < 0) {
             throw new Exception("Either N or k is smaller than 0");
+        }
+        if (N == 0 && k > 0) {
+            throw new Exception("N == 0 but k > 0.");
         }
         if (N > log10FactorialArray.length) {
             throw new IndexOutOfBoundsException(String.format(Locale.US, "N = %d is larger than the maxValue (%d) allowed. Please create a Binomial object with a larger maxValue.", N, log10FactorialArray.length));
         }
-        double pValue = 0;
-        for (int i = k; i <= N; ++i) {
-            pValue += Math.pow(10, calLog10PMF(N, i, p));
+
+        if (N == 0 && k == 0) {
+            return 1;
+        } else {
+            double pValue = 0;
+            for (int i = k; i <= N; ++i) {
+                pValue += Math.pow(10, calLog10PMF(N, i, p));
+            }
+            return pValue;
         }
-        return pValue;
     }
 
     private double calLog10PMF(int N, int i, double p) {
