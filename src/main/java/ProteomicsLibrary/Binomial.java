@@ -16,7 +16,7 @@ public class Binomial {
         }
     }
 
-    public double calPValue(int N, int k, double p) throws Exception {
+    public double calProbLargerThanOrEqualTo(int N, int k, double p) throws Exception {
         if (k > N) {
             throw new Exception(String.format(Locale.US, "k = %d is larger than N = %d", k, N));
         }
