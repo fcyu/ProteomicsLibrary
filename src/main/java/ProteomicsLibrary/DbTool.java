@@ -18,19 +18,20 @@ public class DbTool {
         String id = "";
         String annotate;
         StringBuilder sequence = new StringBuilder(99999);
+        databaseType = databaseType.trim().toLowerCase();
 
         boolean newPro = true;
 
         Pattern headerPattern;
-        if (databaseType.contentEquals("TAIR")) {
+        if (databaseType.contentEquals("tair")) {
             headerPattern = Pattern.compile("^>([^\\s]+)[\\s|]+(.+)$");
-        } else if (databaseType.contentEquals("UniProt") || databaseType.contentEquals("SwissProt")) {
+        } else if (databaseType.contentEquals("uniprot") || databaseType.contentEquals("swissprot")) {
             headerPattern = Pattern.compile("^>[^|]+\\|(.+)\\|(.+)$");
-        } else if (databaseType.contentEquals("neXtProt")) {
+        } else if (databaseType.contentEquals("nextprot")) {
             headerPattern = Pattern.compile("^>nxp:NX_([^ ]+) (.+)");
-        } else if (databaseType.contentEquals("contaminants") || databaseType.contentEquals("ITAG")) {
+        } else if (databaseType.contentEquals("contaminants") || databaseType.contentEquals("itag") || databaseType.contentEquals("refseq")) {
             headerPattern = Pattern.compile("^>([^ ]+) (.+)$");
-        } else if (databaseType.contentEquals("Others")) {
+        } else if (databaseType.contentEquals("others")) {
             headerPattern = Pattern.compile("^>(.+)$");
         } else {
             throw new NullPointerException(String.format(Locale.US, "Incorrect database type (%s) in the parameter file.", databaseType));
@@ -54,7 +55,7 @@ public class DbTool {
                     proteinSequenceMap.put(id, sequence.toString());
                 }
                 id = headMatcher.group(1).trim();
-                if (databaseType.contentEquals("Others")) {
+                if (databaseType.contentEquals("others")) {
                     annotate = id;
                 } else {
                     annotate = headMatcher.group(2).trim();
@@ -240,7 +241,7 @@ public class DbTool {
     }
 
     public static TreeSet<String> reduceProteinIdSet(Set<String> input, String databaseType) { // this only works for TAIR
-        if (input.size() == 1 || !databaseType.contentEquals("TAIR")) {
+        if (input.size() == 1 || !databaseType.toLowerCase().contentEquals("tair")) {
             return new TreeSet<>(input);
         } else {
             Map<String, Integer> tempMap = new HashMap<>();
