@@ -102,7 +102,7 @@ public class Score {
             if (varPTMMap2 == null) {
                 getAffectedIonSet(varPTMMap1, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet); // don't delete two most outside ions because they are used to fix the location when there is no second peptide
                 Set<String> topMatchedPeakSet = getMatchedIonSet(ionMatrix1, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
-                aScore = -10 * Math.log10(binomial.calPValue(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
+                aScore = -10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
             } else {
                 getAffectedIonSet(varPTMMap1, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet);
                 getAffectedIonSet(varPTMMap2, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet);
@@ -123,7 +123,7 @@ public class Score {
 
                 Set<String> topMatchedPeakSet = getMatchedIonSet(ionMatrix1, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
                 Set<String> secondMatchedPeakSet = getMatchedIonSet(ionMatrix2, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
-                aScore = -10 * Math.log10(binomial.calPValue(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)) + 10 * Math.log10(binomial.calPValue(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), secondMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
+                aScore = -10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)) + 10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), secondMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
             }
             if (aScore > finalAScore) {
                 finalAScore = aScore;
