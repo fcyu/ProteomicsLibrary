@@ -92,44 +92,79 @@ public class Score {
         return (double) explainedAaNum / (double) ionMatrix[0].length;
     }
 
+    public static double calBinomialScorePValue(TreeMap<Double, Double> expPL, int topN, Binomial binomial, int localMaxMs2Charge, double[][] ionMatrix, double ms2Tolerance, int peptideLengthWithNC) throws Exception { // calculate a p-value as Andromeda.s
+        double finalPValue = 2;
+        for (int localTopN = 1; localTopN <= topN; ++localTopN) {
+            TreeMap<Double, Double> localPLMap = PrepareSpectrum.topNStyleNormalization(expPL, localTopN);
+            double pValue = calBinomialScorePValueSub(localPLMap, localTopN, binomial, localMaxMs2Charge, ionMatrix, ms2Tolerance, peptideLengthWithNC);
+            if (pValue < finalPValue) {
+                finalPValue = pValue;
+            }
+        }
+        return finalPValue;
+    }
+
+    public static double calBinomialScorePValueSub(TreeMap<Double, Double> localPLMap, int localTopN, Binomial binomial, int localMaxMs2Charge, double[][] ionMatrix, double ms2Tolerance, int peptideLengthWithNC) throws Exception {
+        int matchedIonNum = getMatchedIonNum(localPLMap, localMaxMs2Charge, ionMatrix, ms2Tolerance);
+        return binomial.calProbLargerThanOrEqualTo((peptideLengthWithNC - 2) * 2 * localMaxMs2Charge, matchedIonNum, localTopN * 0.01); // todo: the p is not accurate, but we don't have a perfect solution.
+    }
+
     public static double calAScore(TreeMap<Double, Double> expPL, int topN, Binomial binomial, TreeMap<Coordinate, Double> varPTMMap1, double[][] ionMatrix1, TreeMap<Coordinate, Double> varPTMMap2, double[][] ionMatrix2, double ms2Tolerance, int peptideLengthWithNC) throws Exception {
         double finalAScore = -9999;
         for (int localTopN = 1; localTopN <= topN; ++localTopN) {
             TreeMap<Double, Double> localPLMap = PrepareSpectrum.topNStyleNormalization(expPL, localTopN);
-            TreeSet<Integer> totalAffectedBIonSet = new TreeSet<>();
-            TreeSet<Integer> totalAffectedYIonSet = new TreeSet<>();
-            double aScore;
-            if (varPTMMap2 == null) {
-                getAffectedIonSet(varPTMMap1, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet); // don't delete two most outside ions because they are used to fix the location when there is no second peptide
-                Set<String> topMatchedPeakSet = getMatchedIonSet(ionMatrix1, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
-                aScore = -10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
-            } else {
-                getAffectedIonSet(varPTMMap1, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet);
-                getAffectedIonSet(varPTMMap2, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet);
-
-                // delete two most outside ions because they are not effected by the different PTM locations.
-                if (!totalAffectedBIonSet.contains(1)) {
-                    totalAffectedBIonSet.pollFirst();
-                }
-                if (!totalAffectedBIonSet.contains(peptideLengthWithNC - 3)) {
-                    totalAffectedBIonSet.pollLast();
-                }
-                if (!totalAffectedYIonSet.contains(1)) {
-                    totalAffectedYIonSet.pollFirst();
-                }
-                if (!totalAffectedYIonSet.contains(peptideLengthWithNC - 3)) {
-                    totalAffectedYIonSet.pollLast();
-                }
-
-                Set<String> topMatchedPeakSet = getMatchedIonSet(ionMatrix1, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
-                Set<String> secondMatchedPeakSet = getMatchedIonSet(ionMatrix2, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
-                aScore = -10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)) + 10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), secondMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
-            }
+            double aScore = calAScoreSub(localPLMap, localTopN, binomial, varPTMMap1, ionMatrix1, varPTMMap2, ionMatrix2, ms2Tolerance, peptideLengthWithNC);
             if (aScore > finalAScore) {
                 finalAScore = aScore;
             }
         }
        return finalAScore;
+    }
+
+    public static double calAScoreSub(TreeMap<Double, Double> localPLMap, int localTopN, Binomial binomial, TreeMap<Coordinate, Double> varPTMMap1, double[][] ionMatrix1, TreeMap<Coordinate, Double> varPTMMap2, double[][] ionMatrix2, double ms2Tolerance, int peptideLengthWithNC) throws Exception {
+        TreeSet<Integer> totalAffectedBIonSet = new TreeSet<>();
+        TreeSet<Integer> totalAffectedYIonSet = new TreeSet<>();
+        if (varPTMMap2 == null) {
+            getAffectedIonSet(varPTMMap1, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet); // don't delete two most outside ions because they are used to fix the location when there is no second peptide
+            Set<String> topMatchedPeakSet = getMatchedIonSet(ionMatrix1, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
+            return  -10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
+        } else {
+            getAffectedIonSet(varPTMMap1, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet);
+            getAffectedIonSet(varPTMMap2, peptideLengthWithNC - 2, totalAffectedBIonSet, totalAffectedYIonSet);
+
+            // delete two most outside ions because they are not effected by the different PTM locations.
+            if (!totalAffectedBIonSet.contains(1)) {
+                totalAffectedBIonSet.pollFirst();
+            }
+            if (!totalAffectedBIonSet.contains(peptideLengthWithNC - 3)) {
+                totalAffectedBIonSet.pollLast();
+            }
+            if (!totalAffectedYIonSet.contains(1)) {
+                totalAffectedYIonSet.pollFirst();
+            }
+            if (!totalAffectedYIonSet.contains(peptideLengthWithNC - 3)) {
+                totalAffectedYIonSet.pollLast();
+            }
+
+            Set<String> topMatchedPeakSet = getMatchedIonSet(ionMatrix1, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
+            Set<String> secondMatchedPeakSet = getMatchedIonSet(ionMatrix2, localPLMap, ms2Tolerance, totalAffectedBIonSet, totalAffectedYIonSet);
+            return -10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), topMatchedPeakSet.size(), localTopN * 0.01)) + 10 * Math.log10(binomial.calProbLargerThanOrEqualTo(totalAffectedBIonSet.size() + totalAffectedYIonSet.size(), secondMatchedPeakSet.size(), localTopN * 0.01)); // todo: the p is not accurate, but we don't have a perfect solution.
+        }
+    }
+
+    public static int getMatchedIonNum(TreeMap<Double, Double> expPL, int localMaxMs2Charge, double[][] ionMatrix, double ms2Tolerance) {
+        int K1 = 0;
+        for (int i = 0; i < localMaxMs2Charge * 2; ++i) {
+            for (int j = 0; j < ionMatrix[0].length; ++j) {
+                for (double mz : expPL.keySet()) {
+                    if (Math.abs(mz - ionMatrix[i][j]) <= ms2Tolerance) {
+                        ++K1;
+                        break;
+                    }
+                }
+            }
+        }
+        return K1;
     }
 
     private static void getAffectedIonSet(TreeMap<Coordinate, Double> varPtmMap, int peptideLength, Set<Integer> affectedBIonSet, Set<Integer> affectedYIonSet) {

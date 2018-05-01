@@ -319,6 +319,27 @@ public class ScoreTest {
     }
 
     @Test
+    public void calAScoreSub() throws Exception {
+        assertEquals(21.4021, Score.calAScoreSub(new TreeMap<>(expPL), 6, binomial, varPTMMap1, ionMatrix1, varPTMMap2, ionMatrix2, 0.01, 18), 0.001);
+        assertEquals(31.2747, Score.calAScoreSub(new TreeMap<>(expPL), 6, binomial, varPTMMap1, ionMatrix1, null, null, 0.01, 18), 0.001);
+    }
+
+    @Test
+    public void calBinomialScorePValue() throws Exception {
+        assertEquals(1.34398E-17, Score.calBinomialScorePValue(new TreeMap<>(expPL), 6, binomial, 1, ionMatrix1, 0.01, 18), 0.001);
+        assertEquals(6.37371E-13, Score.calBinomialScorePValue(new TreeMap<>(expPL), 6, binomial, 1, ionMatrix2, 0.01, 18), 0.001);
+    }
+
+    @Test
+    public void calBinomialScorePValueSub () throws Exception {
+        assertEquals(1.343981E-17, Score.calBinomialScorePValueSub(new TreeMap<>(expPL), 6, binomial, 1, ionMatrix1, 0.01, 18), 0.001);
+        assertEquals(4.906808E-26, Score.calBinomialScorePValueSub(new TreeMap<>(expPL), 1, binomial, 1, ionMatrix1, 0.01, 18), 0.001);
+        assertEquals(1.312552E-9, Score.calBinomialScorePValueSub(new TreeMap<>(expPL), 6, binomial, 1, ionMatrix2, 0.01, 18), 0.001);
+        assertEquals(3.982398E-20, Score.calBinomialScorePValueSub(new TreeMap<>(expPL), 1, binomial, 1, ionMatrix2, 0.01, 18), 0.001);
+
+    }
+
+    @Test
     public void getAffectedIonSet() throws Exception {
         Object score = Class.forName("ProteomicsLibrary.Score").newInstance();
         Method method = score.getClass().getDeclaredMethod("getAffectedIonSet", TreeMap.class, int.class, Set.class, Set.class);
@@ -379,5 +400,15 @@ public class ScoreTest {
         Arrays.sort(result);
         groundTruth = new String[]{"b1", "y1", "y2"};
         assertArrayEquals(groundTruth, result);
+    }
+
+    @Test
+    public void getMatchedPeakNum() {
+        assertEquals(17, Score.getMatchedIonNum(new TreeMap<>(expPL), 1, ionMatrix1, 0.01));
+        assertEquals(14, Score.getMatchedIonNum(new TreeMap<>(expPL), 1, ionMatrix2, 0.01));
+        assertEquals(22, Score.getMatchedIonNum(new TreeMap<>(expPL), 1, ionMatrix1, 0.5));
+        assertEquals(21, Score.getMatchedIonNum(new TreeMap<>(expPL), 1, ionMatrix2, 0.5));
+        assertEquals(30, Score.getMatchedIonNum(new TreeMap<>(expPL), 2, ionMatrix1, 0.01));
+        assertEquals(25, Score.getMatchedIonNum(new TreeMap<>(expPL), 2, ionMatrix2, 0.01));
     }
 }
