@@ -11,8 +11,7 @@ public class AA {
     public AA(char aa, double ptmDeltaMass) {
         this.aa = aa;
         this.ptmDeltaMass = ptmDeltaMass;
-        String toString = aa + "-" + ptmDeltaMass;
-        hashCode = toString.hashCode();
+        hashCode = String.format(Locale.US, "%c(%.3f)", aa, ptmDeltaMass).hashCode();
     }
 
     public boolean hasMod() {

@@ -32,7 +32,7 @@ public class AATest {
     @Test
     public void equals() {
         AA aa11 = new AA('S',79.99);
-        AA aa12 = new AA('S',79.9901);
+        AA aa12 = new AA('S',79.991);
         AA aa13 = new AA('F', 79.99);
         assertEquals(aa11, aa1);
         assertNotEquals(aa12, aa1);
