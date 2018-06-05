@@ -48,4 +48,14 @@ public class AATest {
         assertEquals("E(3.222)", (new AA('E', 3.2219)).toString());
         assertEquals("F(6.333)", (new AA('F', 6.3331)).toString());
     }
+
+    @Test
+    public void compareTo() {
+        assertTrue((new AA('A', 0)).compareTo(new AA('B', 0)) < 0);
+        assertTrue((new AA('C', 0)).compareTo(new AA('B', 0)) > 0);
+        assertTrue((new AA('A', 0)).compareTo(new AA('A', 2)) < 0);
+        assertTrue((new AA('A', 2)).compareTo(new AA('A', 0)) > 0);
+        assertTrue((new AA('A', 3)).compareTo(new AA('B', 0)) < 0);
+        assertTrue((new AA('A', 0)).compareTo(new AA('A', 0)) == 0);
+    }
 }
