@@ -210,4 +210,10 @@ public class MassToolTest {
         assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF(-23.231)SDS.S"));
         assertEquals("nSDF(-23.231)SDSc", MassTool.unifyPeptide("nSDF[-23.231]SDS.-"));
     }
+
+    @Test
+    public void L2I() {
+        assertEquals("nSDEIISDc", MassTool.L2I("nSDEILSDc"));
+        assertEquals("nSDEIISDc", MassTool.L2I("nSDELLSDc"));
+    }
 }

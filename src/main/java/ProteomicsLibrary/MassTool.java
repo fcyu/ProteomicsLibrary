@@ -599,6 +599,10 @@ public class MassTool {
         return sb.toString();
     }
 
+    public static String L2I(String peptide) {
+        return peptide.replaceAll("L", "I");
+    }
+
     public static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
         Pattern digestSitePattern;
         if (protectionSite.contentEquals("-")) {
