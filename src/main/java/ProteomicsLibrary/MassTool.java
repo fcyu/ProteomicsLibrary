@@ -612,12 +612,18 @@ public class MassTool {
 
     public static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
         Pattern digestSitePattern;
-        if (protectionSite.contentEquals("-")) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
-        } else if (cleavageFromCTerm) {
-            digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
+        if (cleavageFromCTerm) {
+            if (protectionSite.contentEquals("-")) {
+                digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
+            } else {
+                digestSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])");
+            }
         } else {
-            digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
+            if (protectionSite.contentEquals("-")) {
+                digestSitePattern = Pattern.compile("[" + cleavageSite + "]");
+            } else {
+                digestSitePattern = Pattern.compile("(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
+            }
         }
         return digestSitePattern;
     }
