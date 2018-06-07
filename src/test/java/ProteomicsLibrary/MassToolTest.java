@@ -67,7 +67,6 @@ public class MassToolTest {
 
     @Test
     public void buildChainSet() {
-        // 1 missed-cleavage, N-term linkable
         MassTool massTool = new MassTool(1, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         Set<String> result = massTool.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
         Set<String> groundTruth = new HashSet<>();
@@ -80,14 +79,42 @@ public class MassToolTest {
         groundTruth.add("nIATAAAASKPSLNASTSVNPKLSKc");
         groundTruth.add("nLSKTMDYMRc");
         groundTruth.add("nVFKTYc");
-
         String[] groundTruthArray = groundTruth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
         String[] resultArray = result.toArray(new String[0]);
         Arrays.sort(resultArray);
         assertArrayEquals(groundTruthArray, resultArray);
 
-        // 2 missed-cleavage, N-term linkable
+        massTool = new MassTool(1, fixModMap, "D", "-", false, 1.0005 * 0.5, 0.6, "N14");
+        result = massTool.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
+        groundTruth = new HashSet<>();
+        groundTruth.add("nMRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMc");
+        groundTruth.add("nRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMc");
+        groundTruth.add("nMRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVc");
+        groundTruth.add("nRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVc");
+        groundTruth.add("nDYMRIFSVFVVTLWIIRVDARVFKTYc");
+        groundTruth.add("nDARVFKTYc");
+        groundTruthArray = groundTruth.toArray(new String[0]);
+        Arrays.sort(groundTruthArray);
+        resultArray = result.toArray(new String[0]);
+        Arrays.sort(resultArray);
+        assertArrayEquals(groundTruthArray, resultArray);
+
+        massTool = new MassTool(1, fixModMap, "D", "-", false, 1.0005 * 0.5, 0.6, "N14");
+        result = massTool.buildChainSet("MRGFACSSASRIATAAAASKPSLNCASTSVNPKLSKTMDYMRICFSVFVVTLWIIRVDARVFKTY", (short) 2);
+        groundTruth = new HashSet<>();
+        groundTruth.add("nMRGFACSSASRIATAAAASKPSLNCASTSVNPKLSKTMc");
+        groundTruth.add("nRGFACSSASRIATAAAASKPSLNCASTSVNPKLSKTMc");
+        groundTruth.add("nMRGFACSSASRIATAAAASKPSLNCASTSVNPKLSKTMDYMRICFSVFVVTLWIIRVc");
+        groundTruth.add("nRGFACSSASRIATAAAASKPSLNCASTSVNPKLSKTMDYMRICFSVFVVTLWIIRVc");
+        groundTruth.add("nDYMRICFSVFVVTLWIIRVc");
+        groundTruth.add("nDYMRICFSVFVVTLWIIRVDARVFKTYc");
+        groundTruthArray = groundTruth.toArray(new String[0]);
+        Arrays.sort(groundTruthArray);
+        resultArray = result.toArray(new String[0]);
+        Arrays.sort(resultArray);
+        assertArrayEquals(groundTruthArray, resultArray);
+
         massTool = new MassTool(2, fixModMap, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
         result = massTool.buildChainSet("MRGFASSASRIATAAAASKPSLNASTSVNPKLSKTMDYMRIFSVFVVTLWIIRVDARVFKTY", (short) 1);
         groundTruth = new HashSet<>();
@@ -106,7 +133,6 @@ public class MassToolTest {
         groundTruth.add("nIATAAAASKPSLNASTSVNPKLSKTMDYMRc");
         groundTruth.add("nLSKTMDYMRIFSVFVVTLWIIRc");
         groundTruth.add("nVDARVFKTYc");
-
         groundTruthArray = groundTruth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
         resultArray = result.toArray(new String[0]);
@@ -117,10 +143,8 @@ public class MassToolTest {
     @Test
     public void buildPeptideSet() {
         MassTool massTool = new MassTool(2, "KR", "P", true, 1.0005 * 0.5, 0.6, "N14");
-
         String proteinSequence = "MSDDFKDEDRDDKPSSDKKDF";
         Set<String> result = massTool.buildPeptideSet(proteinSequence);
-
         Set<String> groundTruth = new HashSet<>();
         groundTruth.add("nMSDDFKc");
         groundTruth.add("nSDDFKc");
@@ -137,13 +161,45 @@ public class MassToolTest {
         groundTruth.add("nSDDFKDEDRDDKPSSDKc");
         groundTruth.add("nDEDRDDKPSSDKKc");
         groundTruth.add("nDDKPSSDKKDFc");
-
         String[] resultArray = result.toArray(new String[0]);
         Arrays.sort(resultArray);
         String[] groundTruthArray = groundTruth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
         assertArrayEquals(groundTruthArray, resultArray);
 
+        massTool = new MassTool(2, "D", "-", false, 1.0005 * 0.5, 0.6, "N14");
+        proteinSequence = "MSDDFKDEDRPDKPSSDKKDF";
+        result = massTool.buildPeptideSet(proteinSequence);
+        groundTruth = new HashSet<>();
+        groundTruth.add("nMSc");
+        groundTruth.add("nMSDc");
+        groundTruth.add("nMSDDFKc");
+        groundTruth.add("nDc");
+        groundTruth.add("nDDFKc");
+        groundTruth.add("nDDFKDEc");
+        groundTruth.add("nDFKc");
+        groundTruth.add("nDFKDEc");
+        groundTruth.add("nDFKDEDRPc");
+        groundTruth.add("nDEc");
+        groundTruth.add("nDEDRPc");
+        groundTruth.add("nDEDRPDKPSSc");
+        groundTruth.add("nDRPc");
+        groundTruth.add("nDRPDKPSSc");
+        groundTruth.add("nDRPDKPSSDKKc");
+        groundTruth.add("nDKPSSc");
+        groundTruth.add("nDKPSSDKKc");
+        groundTruth.add("nDKPSSDKKDFc");
+        groundTruth.add("nDKKc");
+        groundTruth.add("nDKKDFc");
+        groundTruth.add("nDFc");
+        groundTruth.add("nSc");
+        groundTruth.add("nSDc");
+        groundTruth.add("nSDDFKc");
+        resultArray = result.toArray(new String[0]);
+        Arrays.sort(resultArray);
+        groundTruthArray = groundTruth.toArray(new String[0]);
+        Arrays.sort(groundTruthArray);
+        assertArrayEquals(groundTruthArray, resultArray);
     }
 
     @Test
@@ -200,6 +256,8 @@ public class MassToolTest {
         massTool = new MassTool(1, "KR", "P", false, 0.5, 0.6, "N14");
         assertEquals(Pattern.compile("(?<![P])[KR]").toString(), massTool.getDigestSitePattern().toString());
         massTool = new MassTool(1, "K", "-", true, 0.5, 0.6, "N14");
+        assertEquals(Pattern.compile("[K]").toString(), massTool.getDigestSitePattern().toString());
+        massTool = new MassTool(1, "K", "-", false, 0.5, 0.6, "N14");
         assertEquals(Pattern.compile("[K]").toString(), massTool.getDigestSitePattern().toString());
     }
     @Test
