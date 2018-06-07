@@ -477,7 +477,7 @@ public class MassTool {
     }
 
     public Set<String> buildPeptideSet(String proteinSequence) {
-        Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proteinSequence);
+        Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
         Set<String> peptideSeqSet = new HashSet<>();
 
         for (int i = 0; i <= missedCleavage; ++i) {
@@ -490,7 +490,7 @@ public class MassTool {
         // consider first "M" situation
         if (proteinSequence.startsWith("M")) {
             String newSequence = proteinSequence.substring(1);
-            digestRangeMap = digestTrypsin(newSequence);
+            digestRangeMap = digest(newSequence);
             for (int i = 0; i <= missedCleavage; ++i) {
                 if (!digestRangeMap.get(i).isEmpty()) {
                     int[] digestRange1 = digestRangeMap.get(i).get(0);
@@ -624,7 +624,7 @@ public class MassTool {
 
     // Cross-linking part
     public Set<String> buildChainSet(String proteinSequence, short linkerType) {
-        Map<Integer, List<int[]>> digestRangeMap = digestTrypsin(proteinSequence);
+        Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
         Set<String> chainSequenceSet = new HashSet<>();
 
         for (int i = 0; i <= missedCleavage; ++i) {
@@ -657,7 +657,7 @@ public class MassTool {
 
         if (proteinSequence.startsWith("M")) {
             String newSequence = proteinSequence.substring(1);
-            digestRangeMap = digestTrypsin(newSequence);
+            digestRangeMap = digest(newSequence);
 
             for (int i = 0; i <= missedCleavage; ++i) {
                 if (!digestRangeMap.get(i).isEmpty()) {
@@ -760,7 +760,7 @@ public class MassTool {
     }
     // End of cross-linking part
 
-    private Map<Integer, List<int[]>> digestTrypsin(String proteinSequence) {
+    private Map<Integer, List<int[]>> digest(String proteinSequence) {
         // Cut a protein
         List<Integer> cutPointList = new ArrayList<>(200);
         int length = proteinSequence.length();
