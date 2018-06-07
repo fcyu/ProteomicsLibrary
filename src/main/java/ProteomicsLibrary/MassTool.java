@@ -762,11 +762,11 @@ public class MassTool {
 
     private Map<Integer, List<int[]>> digest(String proteinSequence) {
         // Cut a protein
-        List<Integer> cutPointList = new ArrayList<>(200);
+        TreeSet<Integer> cutPointSet = new TreeSet<>();
         int length = proteinSequence.length();
         int idxStart = 0;
         Matcher matchObj = digestSitePattern.matcher(proteinSequence);
-        cutPointList.add(0);
+        cutPointSet.add(0);
         while (idxStart < length) {
             if (matchObj.find()) {
                 int cutPoint;
@@ -775,15 +775,15 @@ public class MassTool {
                 } else {
                     cutPoint = matchObj.start();
                 }
-                cutPointList.add(cutPoint);
+                cutPointSet.add(cutPoint);
                 idxStart = cutPoint;
             } else {
-                cutPointList.add(length);
+                cutPointSet.add(length);
                 break;
             }
         }
 
-        Collections.sort(cutPointList);
+        Integer[] cutPointArray = cutPointSet.toArray(new Integer[0]);
 
         // Deal with missed cleavage
         Map<Integer, List<int[]>> digestRangeMap = new HashMap<>();
@@ -791,9 +791,9 @@ public class MassTool {
             List<int[]> temp = new LinkedList<>();
             int leftPoint;
             int rightPoint;
-            for (int i = 0; i + 1 + time < cutPointList.size(); ++i) {
-                leftPoint = cutPointList.get(i);
-                rightPoint = cutPointList.get(i + 1 + time);
+            for (int i = 0; i + 1 + time < cutPointSet.size(); ++i) {
+                leftPoint = cutPointArray[i];
+                rightPoint = cutPointArray[i + 1 + time];
                 temp.add(new int[]{leftPoint, rightPoint});
             }
             digestRangeMap.put(time, temp);
