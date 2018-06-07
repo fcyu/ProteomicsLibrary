@@ -53,6 +53,7 @@ public class MassTool {
     private final double inverse2Ms2Tolerance;
     private final double oneMinusBinOffset;
     private final Pattern digestSitePattern;
+    private final Pattern digestSitePattern2; // this is for removing the digest site form cross-linking
     private final boolean cleavageFromCTerm;
     private final String labelling;
     private final Map<Character, Double> fixModMap;
@@ -223,6 +224,7 @@ public class MassTool {
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
         digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
+        digestSitePattern2 = getDigestSitePattern2(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
     public MassTool(int missedCleavage, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
@@ -417,6 +419,7 @@ public class MassTool {
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
         digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
+        digestSitePattern2 = getDigestSitePattern2(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
     public static boolean isAA(char aa) {
@@ -628,6 +631,24 @@ public class MassTool {
         return digestSitePattern;
     }
 
+    public static Pattern getDigestSitePattern2(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+        Pattern digestSitePattern2;
+        if (cleavageFromCTerm) {
+            if (protectionSite.contentEquals("-")) {
+                digestSitePattern2 = Pattern.compile("[" + cleavageSite + "]$");
+            } else {
+                digestSitePattern2 = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])$");
+            }
+        } else {
+            if (protectionSite.contentEquals("-")) {
+                digestSitePattern2 = Pattern.compile("^[" + cleavageSite + "]");
+            } else {
+                digestSitePattern2 = Pattern.compile("^(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
+            }
+        }
+        return digestSitePattern2;
+    }
+
     // Cross-linking part
     public Set<String> buildChainSet(String proteinSequence, short linkerType) {
         Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
@@ -636,9 +657,11 @@ public class MassTool {
         for (int i = 0; i <= missedCleavage; ++i) {
             for (int[] digestRange1 : digestRangeMap.get(i)) {
                 String subString = proteinSequence.substring(digestRange1[0], digestRange1[1]);
-                if (linkerType == 1 && subString.substring(0, subString.length() - 1).contains("K")) {
+                Matcher tempMatcher = digestSitePattern2.matcher(subString);
+                String tempString = tempMatcher.replaceAll("");
+                if (linkerType == 1 && tempString.contains("K")) {
                     chainSequenceSet.add("n" + subString + "c");
-                } else if (linkerType == 2 && subString.substring(0, subString.length() - 1).contains("C")) {
+                } else if (linkerType == 2 && tempString.contains("C")) {
                     chainSequenceSet.add("n" + subString + "c");
                 }
 
@@ -669,9 +692,11 @@ public class MassTool {
                 if (!digestRangeMap.get(i).isEmpty()) {
                     int[] digestRange1 = digestRangeMap.get(i).get(0);
                     String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
-                    if (linkerType == 1 && subString.substring(0, subString.length() - 1).contains("K")) {
+                    Matcher tempMatcher = digestSitePattern2.matcher(subString);
+                    String tempString = tempMatcher.replaceAll("");
+                    if (linkerType == 1 && tempString.contains("K")) {
                         chainSequenceSet.add("n" + subString + "c");
-                    } else if (linkerType == 2 && subString.substring(0, subString.length() - 1).contains("C")) {
+                    } else if (linkerType == 2 && tempString.contains("C")) {
                         chainSequenceSet.add("n" + subString + "c");
                     }
 
