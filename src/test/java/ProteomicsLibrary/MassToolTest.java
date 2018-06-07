@@ -203,6 +203,12 @@ public class MassToolTest {
         assertEquals(Pattern.compile("[K]").toString(), massTool.getDigestSitePattern().toString());
     }
     @Test
+    public void aaListToSeq() {
+        AA[] aaArray = new AA[]{new AA('A', 0), new AA('B', 0.1), new AA('C', 90), new AA('D', -9.8787), new AA('E', 90.0978)};
+        assertEquals("ABC(90.000)D(-9.879)E(90.098)", MassTool.aaListToSeq(aaArray));
+    }
+
+    @Test
     public void unifyPeptide() {
         assertEquals("nSDFSDSc", MassTool.unifyPeptide("A.SDFSDS.S"));
         assertEquals("nS(11.320)DFSDSc", MassTool.unifyPeptide("-.S[11.320233]DFSDS.S"));

@@ -589,6 +589,13 @@ public class MassTool {
         return digestSitePattern;
     }
 
+    public static String aaListToSeq(AA[] aaArray) {
+        StringBuilder sb = new StringBuilder();
+        for (AA aa : aaArray) {
+            sb.append(aa.toString());
+        }
+        return sb.toString();
+    }
 
     public static String unifyPeptide(String peptide) {
         AA[] aaArray = seqToAAList(deleteLeftRightFlankingAddNC(peptide));
