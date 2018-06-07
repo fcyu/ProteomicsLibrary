@@ -278,5 +278,33 @@ public class DbTool {
     public static String getCLSequenceOnly(String peptide) {
         return getCLPtmFreePeptide(peptide).replaceAll("[nc]", "");
     }
+
+    public static int getMissedCleavageNum(String peptide, String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+        Pattern pattern = getMissedCleavageSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
+        Matcher matcher = pattern.matcher(getSequenceOnly(peptide));
+        int num = 0;
+        while (matcher.find()) {
+            ++num;
+        }
+        return num;
+    }
+
+    private static Pattern getMissedCleavageSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+        Pattern missedCleavageSitePattern;
+        if (cleavageFromCTerm) {
+            if (protectionSite.contentEquals("-")) {
+                missedCleavageSitePattern = Pattern.compile("[" + cleavageSite + "](?!$)");
+            } else {
+                missedCleavageSitePattern = Pattern.compile("[" + cleavageSite + "](?![" + protectionSite + "])(?!$)");
+            }
+        } else {
+            if (protectionSite.contentEquals("-")) {
+                missedCleavageSitePattern = Pattern.compile("(?<!^)[" + cleavageSite + "]");
+            } else {
+                missedCleavageSitePattern = Pattern.compile("(?<!^)(?<![" + protectionSite + "])" + "[" + cleavageSite + "]");
+            }
+        }
+
+        return missedCleavageSitePattern;
     }
 }

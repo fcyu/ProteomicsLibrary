@@ -176,4 +176,29 @@ public class DbToolTest {
         groundTruth = "KYGSGGA-1-IINEPTAAAIAYGLDKK-16";
         assertEquals(groundTruth, result);
     }
+
+    @Test
+    public void getMissedCleavageNum() {
+        assertEquals(1, DbTool.getMissedCleavageNum("nSDDEWFSDKSDWFFSGEFDFKc", "KR", "P", true));
+        assertEquals(0, DbTool.getMissedCleavageNum("nSDDEWFSDKPSDWFFGEFDFKc", "KR", "P", true));
+        assertEquals(1, DbTool.getMissedCleavageNum("nSDDEWFSDRSDWFFSGEFDFRc", "KR", "P", true));
+        assertEquals(0, DbTool.getMissedCleavageNum("nSDDEWFSDRPSDFFSEFDFKPc", "KR", "P", true));
+        assertEquals(3, DbTool.getMissedCleavageNum("nKDDEWFSDKKSDWFFGEFDFRc", "KR", "P", true));
+        assertEquals(1, DbTool.getMissedCleavageNum("nSDDEWFSDKSDWFFGEFDKPKc", "KR", "P", true));
+        assertEquals(2, DbTool.getMissedCleavageNum("nSDDEWFSDKSDWFFGEFDFKRc", "KR", "P", true));
+
+        assertEquals(1, DbTool.getMissedCleavageNum("nSDDEWFSDKSDWFFSGEFDFKc", "KR", "-", true));
+        assertEquals(1, DbTool.getMissedCleavageNum("nSDDEWFSDKPSDWFFGEFDFKc", "KR", "-", true));
+        assertEquals(1, DbTool.getMissedCleavageNum("nSDDEWFSDRSDWFFSGEFDFRc", "KR", "-", true));
+        assertEquals(3, DbTool.getMissedCleavageNum("nRDDEWFSDRPSDFFSEFDFKPc", "KR", "-", true));
+        assertEquals(3, DbTool.getMissedCleavageNum("nKDDEWFSDKKSDWFFGEFDFRc", "KR", "-", true));
+        assertEquals(2, DbTool.getMissedCleavageNum("nSDDEWFSDKSDWFFGEFDKPKc", "KR", "-", true));
+        assertEquals(2, DbTool.getMissedCleavageNum("nSDDEWFSDKSDWFFGEFDFKRc", "KR", "-", true));
+
+        assertEquals(1, DbTool.getMissedCleavageNum("nUJINDNIKJNINNKOOIOKMMLc", "DE", "-", false));
+        assertEquals(1, DbTool.getMissedCleavageNum("nDJINDNIKJNINNKOOIOKMMLc", "DE", "-", false));
+        assertEquals(2, DbTool.getMissedCleavageNum("nEJINDEIKJNINNKOOIOKMMLc", "DE", "-", false));
+        assertEquals(2, DbTool.getMissedCleavageNum("nDJINDNIKJNINNKOOIOKMMDc", "DE", "-", false));
+        assertEquals(0, DbTool.getMissedCleavageNum("nDJINONIKJNINNKOOIOKMMLc", "DE", "-", false));
+    }
 }
