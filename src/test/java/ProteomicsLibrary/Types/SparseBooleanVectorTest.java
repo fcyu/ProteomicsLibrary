@@ -105,6 +105,6 @@ public class SparseBooleanVectorTest {
         Integer[] results = sparseBooleanVector.getNonZeroIdxes();
         Arrays.sort(results);
         Integer[] groundTruth = new Integer[]{1, 3, 5, 10, 11};
-        assertArrayEquals(results, groundTruth);
+        assertArrayEquals(groundTruth, results);
     }
 }

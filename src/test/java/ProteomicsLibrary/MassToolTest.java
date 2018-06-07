@@ -142,8 +142,8 @@ public class MassToolTest {
         Arrays.sort(resultArray);
         String[] groundTruthArray = groundTruth.toArray(new String[0]);
         Arrays.sort(groundTruthArray);
+        assertArrayEquals(groundTruthArray, resultArray);
 
-        assertArrayEquals(resultArray, groundTruthArray);
     }
 
     @Test
