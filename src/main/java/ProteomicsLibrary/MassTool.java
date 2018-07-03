@@ -613,7 +613,7 @@ public class MassTool {
         return peptide.replaceAll("L", "I");
     }
 
-    public static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+    static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
         Pattern digestSitePattern;
         if (cleavageFromCTerm) {
             if (protectionSite.contentEquals("-")) {
@@ -631,7 +631,7 @@ public class MassTool {
         return digestSitePattern;
     }
 
-    public static Pattern getDigestSitePatternForLinkSiteChecking(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+    private static Pattern getDigestSitePatternForLinkSiteChecking(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
         Pattern digestSitePattern2;
         if (cleavageFromCTerm) {
             if (protectionSite.contentEquals("-")) {
