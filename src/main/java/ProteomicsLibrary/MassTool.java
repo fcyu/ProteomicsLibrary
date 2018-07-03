@@ -53,8 +53,8 @@ public class MassTool {
     private final double inverse2Ms2Tolerance;
     private final double oneMinusBinOffset;
     private final Pattern digestSitePattern;
-    private final Pattern digestSitePattern2; // this is for removing the digest site form cross-linking
     private final boolean cleavageFromCTerm;
+    private final Pattern digestSitePatternForLinkSiteChecking; // this is for removing the digest site form cross-linking
     private final String labelling;
     private final Map<Character, Double> fixModMap;
 
@@ -224,7 +224,7 @@ public class MassTool {
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
         digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
-        digestSitePattern2 = getDigestSitePattern2(cleavageSite, protectionSite, cleavageFromCTerm);
+        digestSitePatternForLinkSiteChecking = getDigestSitePatternForLinkSiteChecking(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
     public MassTool(int missedCleavage, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
@@ -419,7 +419,7 @@ public class MassTool {
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
         digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
-        digestSitePattern2 = getDigestSitePattern2(cleavageSite, protectionSite, cleavageFromCTerm);
+        digestSitePatternForLinkSiteChecking = getDigestSitePatternForLinkSiteChecking(cleavageSite, protectionSite, cleavageFromCTerm);
     }
 
     public static boolean isAA(char aa) {
@@ -631,7 +631,7 @@ public class MassTool {
         return digestSitePattern;
     }
 
-    public static Pattern getDigestSitePattern2(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
+    public static Pattern getDigestSitePatternForLinkSiteChecking(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
         Pattern digestSitePattern2;
         if (cleavageFromCTerm) {
             if (protectionSite.contentEquals("-")) {
@@ -657,7 +657,7 @@ public class MassTool {
         for (int i = 0; i <= missedCleavage; ++i) {
             for (int[] digestRange1 : digestRangeMap.get(i)) {
                 String subString = proteinSequence.substring(digestRange1[0], digestRange1[1]);
-                Matcher tempMatcher = digestSitePattern2.matcher(subString);
+                Matcher tempMatcher = digestSitePatternForLinkSiteChecking.matcher(subString);
                 String tempString = tempMatcher.replaceAll("");
                 if (linkerType == 1 && tempString.contains("K")) {
                     chainSequenceSet.add("n" + subString + "c");
@@ -692,7 +692,7 @@ public class MassTool {
                 if (!digestRangeMap.get(i).isEmpty()) {
                     int[] digestRange1 = digestRangeMap.get(i).get(0);
                     String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
-                    Matcher tempMatcher = digestSitePattern2.matcher(subString);
+                    Matcher tempMatcher = digestSitePatternForLinkSiteChecking.matcher(subString);
                     String tempString = tempMatcher.replaceAll("");
                     if (linkerType == 1 && tempString.contains("K")) {
                         chainSequenceSet.add("n" + subString + "c");
