@@ -6,12 +6,19 @@ public class AA implements Comparable<AA> {
 
     public final char aa;
     public final double ptmDeltaMass;
+    private final String toString;
     private final int hashCode;
 
     public AA(char aa, double ptmDeltaMass) {
         this.aa = aa;
         this.ptmDeltaMass = ptmDeltaMass;
-        hashCode = String.format(Locale.US, "%c(%.3f)", aa, ptmDeltaMass).hashCode();
+
+        if (hasMod()) { // If the PTM is smaller than or equal to 0.1, there will be no string for the PTM.
+            toString = String.format(Locale.US, "%c(%.3f)", aa, ptmDeltaMass);
+        } else {
+            toString =  String.valueOf(aa);
+        }
+        hashCode = toString.hashCode();
     }
 
     public boolean hasMod() {
@@ -34,12 +41,8 @@ public class AA implements Comparable<AA> {
         return new AA(aa, ptmDeltaMass);
     }
 
-    public String toString() { // If the PTM is smaller than or equal to 0.1, there will be no string for the PTM.
-        if (hasMod()) {
-            return String.format(Locale.US, "%c(%.3f)", aa, ptmDeltaMass);
-        } else {
-            return String.valueOf(aa);
-        }
+    public String toString() {
+        return toString;
     }
 
     public int compareTo(AA other) {
