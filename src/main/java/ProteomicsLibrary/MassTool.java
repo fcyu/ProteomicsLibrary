@@ -484,8 +484,8 @@ public class MassTool {
         Set<String> peptideSeqSet = new HashSet<>();
 
         for (int i = 0; i <= missedCleavage; ++i) {
-            for (int[] digestRange1 : digestRangeMap.get(i)) {
-                String subString = proteinSequence.substring(digestRange1[0], digestRange1[1]);
+            for (int[] digestRange : digestRangeMap.get(i)) {
+                String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
                 peptideSeqSet.add("n" + subString + "c");
             }
         }
@@ -496,8 +496,8 @@ public class MassTool {
             digestRangeMap = digest(newSequence);
             for (int i = 0; i <= missedCleavage; ++i) {
                 if (!digestRangeMap.get(i).isEmpty()) {
-                    int[] digestRange1 = digestRangeMap.get(i).get(0);
-                    String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
+                    int[] digestRange = digestRangeMap.get(i).get(0);
+                    String subString = newSequence.substring(digestRange[0], digestRange[1]);
                     peptideSeqSet.add("n" + subString + "c");
                 }
             }
@@ -655,9 +655,9 @@ public class MassTool {
         Set<String> chainSequenceSet = new HashSet<>();
 
         for (int i = 0; i <= missedCleavage; ++i) {
-            for (int[] digestRange1 : digestRangeMap.get(i)) {
-                String subString = proteinSequence.substring(digestRange1[0], digestRange1[1]);
-                Matcher tempMatcher = digestSitePatternForLinkSiteChecking.matcher(subString);
+            for (int[] digestRange : digestRangeMap.get(i)) {
+                String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
+                Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
                 String tempString = tempMatcher.replaceAll("");
                 if (linkerType == 1 && tempString.contains("K")) {
                     chainSequenceSet.add("n" + subString + "c");
@@ -665,7 +665,7 @@ public class MassTool {
                     chainSequenceSet.add("n" + subString + "c");
                 }
 
-                if (digestRange1[1] == proteinSequence.length()) {
+                if (digestRange[1] == proteinSequence.length()) {
                     // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
                     if (linkerType == 1 && subString.contains("K")) {
                         chainSequenceSet.add("n" + subString + "c");
@@ -690,9 +690,9 @@ public class MassTool {
 
             for (int i = 0; i <= missedCleavage; ++i) {
                 if (!digestRangeMap.get(i).isEmpty()) {
-                    int[] digestRange1 = digestRangeMap.get(i).get(0);
-                    String subString = newSequence.substring(digestRange1[0], digestRange1[1]);
-                    Matcher tempMatcher = digestSitePatternForLinkSiteChecking.matcher(subString);
+                    int[] digestRange = digestRangeMap.get(i).get(0);
+                    String subString = newSequence.substring(digestRange[0], digestRange[1]);
+                    Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
                     String tempString = tempMatcher.replaceAll("");
                     if (linkerType == 1 && tempString.contains("K")) {
                         chainSequenceSet.add("n" + subString + "c");
@@ -700,7 +700,7 @@ public class MassTool {
                         chainSequenceSet.add("n" + subString + "c");
                     }
 
-                    if (digestRange1[1] == newSequence.length()) {
+                    if (digestRange[1] == newSequence.length()) {
                         // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
                         if (linkerType == 1 && subString.contains("K")) {
                             chainSequenceSet.add("n" + subString + "c");
@@ -712,7 +712,7 @@ public class MassTool {
                     if (linkerType == 1) {
                         // Add N-term peptide
                         if (!digestRangeMap.get(i).isEmpty()) {
-                            int[] digestRange = digestRangeMap.get(i).get(0);
+                            digestRange = digestRangeMap.get(i).get(0);
                             subString = newSequence.substring(digestRange[0], digestRange[1]);
                             chainSequenceSet.add("n" + subString + "c");
                         }
