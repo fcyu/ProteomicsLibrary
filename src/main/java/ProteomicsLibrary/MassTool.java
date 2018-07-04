@@ -945,7 +945,9 @@ public class MassTool {
                 rightPoint = cutPointArray[i + 1 + time];
                 temp.add(new int[]{leftPoint, rightPoint});
             }
-            digestRangeMap.put(time, temp);
+            if (!temp.isEmpty()) {
+                digestRangeMap.put(time, temp);
+            }
         }
 
         return digestRangeMap;
