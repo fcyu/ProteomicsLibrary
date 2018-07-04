@@ -483,7 +483,7 @@ public class MassTool {
         Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
         Set<String> peptideSeqSet = new HashSet<>();
 
-        for (int i = 0; i <= missedCleavage; ++i) {
+        for (int i : digestRangeMap.keySet()) {
             for (int[] digestRange : digestRangeMap.get(i)) {
                 String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
                 peptideSeqSet.add("n" + subString + "c");
@@ -494,10 +494,9 @@ public class MassTool {
         if (proteinSequence.startsWith("M")) {
             String newSequence = proteinSequence.substring(1);
             digestRangeMap = digest(newSequence);
-            for (int i = 0; i <= missedCleavage; ++i) {
-                if (!digestRangeMap.get(i).isEmpty()) {
                     int[] digestRange = digestRangeMap.get(i).get(0);
                     String subString = newSequence.substring(digestRange[0], digestRange[1]);
+            for (int i : digestRangeMap.keySet()) {
                     peptideSeqSet.add("n" + subString + "c");
                 }
             }
@@ -654,7 +653,7 @@ public class MassTool {
         Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
         Set<String> chainSequenceSet = new HashSet<>();
 
-        for (int i = 0; i <= missedCleavage; ++i) {
+        for (int i : digestRangeMap.keySet()) {
             for (int[] digestRange : digestRangeMap.get(i)) {
                 String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
                 Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
@@ -688,13 +687,12 @@ public class MassTool {
             String newSequence = proteinSequence.substring(1);
             digestRangeMap = digest(newSequence);
 
-            for (int i = 0; i <= missedCleavage; ++i) {
-                if (!digestRangeMap.get(i).isEmpty()) {
                     int[] digestRange = digestRangeMap.get(i).get(0);
                     String subString = newSequence.substring(digestRange[0], digestRange[1]);
                     Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
                     String tempString = tempMatcher.replaceAll("");
                     if (linkerType == 1 && tempString.contains("K")) {
+            for (int i : digestRangeMap.keySet()) {
                         chainSequenceSet.add("n" + subString + "c");
                     } else if (linkerType == 2 && tempString.contains("C")) {
                         chainSequenceSet.add("n" + subString + "c");
