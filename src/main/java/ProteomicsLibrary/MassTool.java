@@ -52,13 +52,16 @@ public class MassTool {
     private final double ms2Tolerance;
     private final double inverse2Ms2Tolerance;
     private final double oneMinusBinOffset;
-    private final Pattern digestSitePattern;
-    private final boolean cleavageFromCTerm;
-    private final Pattern digestSitePatternForLinkSiteChecking; // this is for removing the digest site form cross-linking
+    private final Pattern digestSitePattern1;
+    private final Pattern digestSitePattern2;
+    private final Boolean cleavageFromCTerm1;
+    private final Boolean cleavageFromCTerm2;
+    private final Pattern digestSitePatternForLinkSiteChecking1; // this is for removing the digest site form cross-linking
+    private final Pattern digestSitePatternForLinkSiteChecking2; // this is for removing the digest site form cross-linking
     private final String labelling;
     private final Map<Character, Double> fixModMap;
 
-    public MassTool(int missedCleavage, Map<Character, Double> fixModMap, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
+    public MassTool(int missedCleavage, Map<Character, Double> fixModMap, String cleavageSite1, String protectionSite1, boolean cleavageFromCTerm1, String cleavageSite2, String protectionSite2, Boolean cleavageFromCTerm2, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
         this.labelling = labelling;
         this.fixModMap = fixModMap;
 
@@ -194,7 +197,8 @@ public class MassTool {
         this.ms2Tolerance = ms2Tolerance;
         inverse2Ms2Tolerance = 1 / (2 * ms2Tolerance);
         this.oneMinusBinOffset = oneMinusBinOffset;
-        this.cleavageFromCTerm = cleavageFromCTerm;
+        this.cleavageFromCTerm1 = cleavageFromCTerm1;
+        this.cleavageFromCTerm2 = cleavageFromCTerm2;
         massTable.put('G', (elementTable.get("C") * 2 + elementTable.get("H") * 3 + elementTable.get("N") + elementTable.get("O") + fixModMap.get('G')));
         massTable.put('A', (elementTable.get("C") * 3 + elementTable.get("H") * 5 + elementTable.get("N") + elementTable.get("O") + fixModMap.get('A')));
         massTable.put('S', (elementTable.get("C") * 3 + elementTable.get("H") * 5 + elementTable.get("N") + elementTable.get("O") * 2 + fixModMap.get('S')));
@@ -223,11 +227,18 @@ public class MassTool {
         massTable.put('$', (massTable.get('Q') + massTable.get('K')) * 0.5); // for Q and K.
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
-        digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
-        digestSitePatternForLinkSiteChecking = getDigestSitePatternForLinkSiteChecking(cleavageSite, protectionSite, cleavageFromCTerm);
+        digestSitePattern1 = getDigestSitePattern(cleavageSite1, protectionSite1, cleavageFromCTerm1);
+        digestSitePatternForLinkSiteChecking1 = getDigestSitePatternForLinkSiteChecking(cleavageSite1, protectionSite1, cleavageFromCTerm1);
+        if (cleavageSite2 != null) {
+            digestSitePattern2 = getDigestSitePattern(cleavageSite2, protectionSite2, cleavageFromCTerm2);
+            digestSitePatternForLinkSiteChecking2 = getDigestSitePatternForLinkSiteChecking(cleavageSite2, protectionSite2, cleavageFromCTerm2);
+        } else {
+            digestSitePattern2 = null;
+            digestSitePatternForLinkSiteChecking2 = null;
+        }
     }
 
-    public MassTool(int missedCleavage, String cleavageSite, String protectionSite, boolean cleavageFromCTerm, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
+    public MassTool(int missedCleavage, String cleavageSite1, String protectionSite1, boolean cleavageFromCTerm1, String cleavageSite2, String protectionSite2, Boolean cleavageFromCTerm2, double ms2Tolerance, double oneMinusBinOffset, String labelling) {
         this.labelling = labelling;
 
         // build a default fixModMap;
@@ -389,7 +400,8 @@ public class MassTool {
         this.ms2Tolerance = ms2Tolerance;
         inverse2Ms2Tolerance = 1 / (2 * ms2Tolerance);
         this.oneMinusBinOffset = oneMinusBinOffset;
-        this.cleavageFromCTerm = cleavageFromCTerm;
+        this.cleavageFromCTerm1 = cleavageFromCTerm1;
+        this.cleavageFromCTerm2 = cleavageFromCTerm2;
         massTable.put('G', (elementTable.get("C") * 2 + elementTable.get("H") * 3 + elementTable.get("N") + elementTable.get("O") + fixModMap.get('G')));
         massTable.put('A', (elementTable.get("C") * 3 + elementTable.get("H") * 5 + elementTable.get("N") + elementTable.get("O") + fixModMap.get('A')));
         massTable.put('S', (elementTable.get("C") * 3 + elementTable.get("H") * 5 + elementTable.get("N") + elementTable.get("O") * 2 + fixModMap.get('S')));
@@ -418,8 +430,15 @@ public class MassTool {
         massTable.put('$', (massTable.get('Q') + massTable.get('K')) * 0.5); // for Q and K.
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
-        digestSitePattern = getDigestSitePattern(cleavageSite, protectionSite, cleavageFromCTerm);
-        digestSitePatternForLinkSiteChecking = getDigestSitePatternForLinkSiteChecking(cleavageSite, protectionSite, cleavageFromCTerm);
+        digestSitePattern1 = getDigestSitePattern(cleavageSite1, protectionSite1, cleavageFromCTerm1);
+        digestSitePatternForLinkSiteChecking1 = getDigestSitePatternForLinkSiteChecking(cleavageSite1, protectionSite1, cleavageFromCTerm1);
+        if (cleavageSite2 != null) {
+            digestSitePattern2 = getDigestSitePattern(cleavageSite2, protectionSite2, cleavageFromCTerm2);
+            digestSitePatternForLinkSiteChecking2 = getDigestSitePatternForLinkSiteChecking(cleavageSite2, protectionSite2, cleavageFromCTerm2);
+        } else {
+            digestSitePattern2 = null;
+            digestSitePatternForLinkSiteChecking2 = null;
+        }
     }
 
     public static boolean isAA(char aa) {
@@ -480,24 +499,43 @@ public class MassTool {
     }
 
     public Set<String> buildPeptideSet(String proteinSequence) {
-        Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
+        Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence, digestSitePattern1, cleavageFromCTerm1, missedCleavage);
         Set<String> peptideSeqSet = new HashSet<>();
 
         for (int i : digestRangeMap.keySet()) {
             for (int[] digestRange : digestRangeMap.get(i)) {
                 String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
-                peptideSeqSet.add("n" + subString + "c");
+                if (digestSitePattern2 == null) {
+                    peptideSeqSet.add("n" + subString + "c");
+                } else {
+                    // it needs to be further digested.
+                    Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                    for (int j : digestRangeMap2.keySet()) {
+                        for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                            peptideSeqSet.add("n" + subString.substring(digestRange2[0], digestRange2[1]) + "c");
+                        }
+                    }
+                }
             }
         }
 
         // consider first "M" situation
         if (proteinSequence.startsWith("M")) {
             String newSequence = proteinSequence.substring(1);
-            digestRangeMap = digest(newSequence);
-                    int[] digestRange = digestRangeMap.get(i).get(0);
-                    String subString = newSequence.substring(digestRange[0], digestRange[1]);
+            digestRangeMap = digest(newSequence, digestSitePattern1, cleavageFromCTerm1, missedCleavage);
             for (int i : digestRangeMap.keySet()) {
+                int[] digestRange = digestRangeMap.get(i).get(0);
+                String subString = newSequence.substring(digestRange[0], digestRange[1]);
+                if (digestSitePattern2 == null) {
                     peptideSeqSet.add("n" + subString + "c");
+                } else {
+                    // it needs to be further digested.
+                    Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                    for (int j : digestRangeMap2.keySet()) {
+                        for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                            peptideSeqSet.add("n" + subString.substring(digestRange2[0], digestRange2[1]) + "c");
+                        }
+                    }
                 }
             }
         }
@@ -587,8 +625,12 @@ public class MassTool {
         return labelling;
     }
 
-    public Pattern getDigestSitePattern() {
-        return digestSitePattern;
+    public Pattern getDigestSitePattern1() {
+        return digestSitePattern1;
+    }
+
+    public Pattern getDigestSitePattern2() {
+        return digestSitePattern2;
     }
 
     public static String aaListToSeq(AA[] aaArray) {
@@ -650,7 +692,7 @@ public class MassTool {
 
     // Cross-linking part
     public Set<String> buildChainSet(String proteinSequence, short linkerType) {
-        Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence);
+        Map<Integer, List<int[]>> digestRangeMap = digest(proteinSequence, digestSitePattern1, cleavageFromCTerm1, missedCleavage);
         Set<String> chainSequenceSet = new HashSet<>();
 
         for (int i : digestRangeMap.keySet()) {
@@ -658,61 +700,139 @@ public class MassTool {
                 String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
                 Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
                 String tempString = tempMatcher.replaceAll("");
-                if (linkerType == 1 && tempString.contains("K")) {
-                    chainSequenceSet.add("n" + subString + "c");
+                if (linkerType == 1 && (digestRange[0] == 0 || tempString.contains("K"))) {
+                    if (digestSitePattern2 == null) {
+                        chainSequenceSet.add("n" + subString + "c");
+                    } else {
+                        Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                        for (int j : digestRangeMap2.keySet()) {
+                            for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                if ((digestRange[0] == 0 && digestRange2[0] == 0) || digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("K")) {
+                                    chainSequenceSet.add("n" + subString2 + "c");
+                                }
+                            }
+                        }
+                    }
                 } else if (linkerType == 2 && tempString.contains("C")) {
-                    chainSequenceSet.add("n" + subString + "c");
+                    if (digestSitePattern2 == null) {
+                        chainSequenceSet.add("n" + subString + "c");
+                    } else {
+                        Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                        for (int j : digestRangeMap2.keySet()) {
+                            for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                if (digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("C")) {
+                                    chainSequenceSet.add("n" + subString2 + "c");
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (digestRange[1] == proteinSequence.length()) {
                     // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
                     if (linkerType == 1 && subString.contains("K")) {
-                        chainSequenceSet.add("n" + subString + "c");
+                        if (digestSitePattern2 == null) {
+                            chainSequenceSet.add("n" + subString + "c");
+                        } else {
+                            Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                            for (int j : digestRangeMap2.keySet()) {
+                                for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                    String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                    if ((digestRange2[1] == subString.length() && subString2.contains("K")) || digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("K")) {
+                                        chainSequenceSet.add("n" + subString2 + "c");
+                                    }
+                                }
+                            }
+                        }
                     } else if (linkerType == 2 && subString.contains("C")) {
-                        chainSequenceSet.add("n" + subString + "c");
+                        if (digestSitePattern2 == null) {
+                            chainSequenceSet.add("n" + subString + "c");
+                        } else {
+                            Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                            for (int j : digestRangeMap2.keySet()) {
+                                for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                    String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                    if ((digestRange2[1] == subString.length() && subString2.contains("C")) || digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("C")) {
+                                        chainSequenceSet.add("n" + subString2 + "c");
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            }
-            if (linkerType == 1) {
-                // Add N-term peptide
-                if (!digestRangeMap.get(i).isEmpty()) {
-                    int[] digestRange = digestRangeMap.get(i).get(0);
-                    String subString = proteinSequence.substring(digestRange[0], digestRange[1]);
-                    chainSequenceSet.add("n" + subString + "c");
                 }
             }
         }
 
         if (proteinSequence.startsWith("M")) {
             String newSequence = proteinSequence.substring(1);
-            digestRangeMap = digest(newSequence);
+            digestRangeMap = digest(newSequence, digestSitePattern1, cleavageFromCTerm1, missedCleavage);
 
-                    int[] digestRange = digestRangeMap.get(i).get(0);
-                    String subString = newSequence.substring(digestRange[0], digestRange[1]);
-                    Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
-                    String tempString = tempMatcher.replaceAll("");
-                    if (linkerType == 1 && tempString.contains("K")) {
             for (int i : digestRangeMap.keySet()) {
+                int[] digestRange = digestRangeMap.get(i).get(0);
+                String subString = newSequence.substring(digestRange[0], digestRange[1]);
+                Matcher tempMatcher = digestSitePatternForLinkSiteChecking1.matcher(subString);
+                String tempString = tempMatcher.replaceAll("");
+                if (linkerType == 1 && (digestRange[0] == 0 || tempString.contains("K"))) {
+                    if (digestSitePattern2 == null) {
                         chainSequenceSet.add("n" + subString + "c");
-                    } else if (linkerType == 2 && tempString.contains("C")) {
-                        chainSequenceSet.add("n" + subString + "c");
-                    }
-
-                    if (digestRange[1] == newSequence.length()) {
-                        // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
-                        if (linkerType == 1 && subString.contains("K")) {
-                            chainSequenceSet.add("n" + subString + "c");
-                        } else if (linkerType == 2 && subString.contains("C")) {
-                            chainSequenceSet.add("n" + subString + "c");
+                    } else {
+                        Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                        for (int j : digestRangeMap2.keySet()) {
+                            for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                if ((digestRange[0] == 0 && digestRange2[0] == 0) || digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("K")) {
+                                    chainSequenceSet.add("n" + subString2 + "c");
+                                }
+                            }
                         }
                     }
+                } else if (linkerType == 2 && tempString.contains("C")) {
+                    if (digestSitePattern2 == null) {
+                        chainSequenceSet.add("n" + subString + "c");
+                    } else {
+                        Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                        for (int j : digestRangeMap2.keySet()) {
+                            for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                if (digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("C")) {
+                                    chainSequenceSet.add("n" + subString2 + "c");
+                                }
+                            }
+                        }
+                    }
+                }
 
-                    if (linkerType == 1) {
-                        // Add N-term peptide
-                        if (!digestRangeMap.get(i).isEmpty()) {
-                            digestRange = digestRangeMap.get(i).get(0);
-                            subString = newSequence.substring(digestRange[0], digestRange[1]);
+                if (digestRange[1] == newSequence.length()) {
+                    // This is the end of the protein. No digestion site, so the link-sites in any position including C-term can be linked.
+                    if (linkerType == 1 && subString.contains("K")) {
+                        if (digestSitePattern2 == null) {
                             chainSequenceSet.add("n" + subString + "c");
+                        } else {
+                            Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                            for (int j : digestRangeMap2.keySet()) {
+                                for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                    String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                    if ((digestRange2[1] == subString.length() && subString2.contains("K")) || digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("K")) {
+                                        chainSequenceSet.add("n" + subString2 + "c");
+                                    }
+                                }
+                            }
+                        }
+                    } else if (linkerType == 2 && subString.contains("C")) {
+                        if (digestSitePattern2 == null) {
+                            chainSequenceSet.add("n" + subString + "c");
+                        } else {
+                            Map<Integer, List<int[]>> digestRangeMap2 = digest(subString, digestSitePattern2, cleavageFromCTerm2, missedCleavage - i);
+                            for (int j : digestRangeMap2.keySet()) {
+                                for (int[] digestRange2 : digestRangeMap2.get(j)) {
+                                    String subString2 = subString.substring(digestRange2[0], digestRange2[1]);
+                                    if ((digestRange2[0] == subString.length() && subString2.contains("C")) || digestSitePatternForLinkSiteChecking2.matcher(digestSitePatternForLinkSiteChecking1.matcher(subString2).replaceAll("")).replaceAll("").contains("C")) {
+                                        chainSequenceSet.add("n" + subString2 + "c");
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -789,7 +909,7 @@ public class MassTool {
     }
     // End of cross-linking part
 
-    private Map<Integer, List<int[]>> digest(String proteinSequence) {
+    static private Map<Integer, List<int[]>> digest(String proteinSequence, Pattern digestSitePattern, boolean cleavageFromCTerm, int missedCleavage) {
         // Cut a protein
         TreeSet<Integer> cutPointSet = new TreeSet<>();
         int length = proteinSequence.length();

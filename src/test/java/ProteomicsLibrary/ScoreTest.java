@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ScoreTest {
 
-    private static final MassTool massTool = new MassTool(2, "KR", "P", true, 0.01, 1, "N14");
+    private static final MassTool massTool = new MassTool(2, "KR", "P", true, null, null, null, 0.01, 1, "N14");
     private static final Binomial binomial = new Binomial(100);
 
     private static double[][] ionMatrix1;

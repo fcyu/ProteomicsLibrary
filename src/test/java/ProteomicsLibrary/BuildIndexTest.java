@@ -13,18 +13,18 @@ import static org.junit.Assert.*;
 
 public class BuildIndexTest {
 
-    private static BuildIndex buildIndex;
+    private static Map<String, String> proteinSequenceMap;
 
     @Before
     public void setUp() {
-        Map<String, String> proteinSequenceMap = new HashMap<>();
+        proteinSequenceMap = new HashMap<>();
         proteinSequenceMap.put("pro1", "SSDSDSKSDSRSDSDSKPSDS");
         proteinSequenceMap.put("pro2", "SDSKKSDSRDSSK");
-        buildIndex = new BuildIndex(proteinSequenceMap, "KR", "P", true, 1);
     }
 
     @Test
     public void getTargetPeptideProteinMap() {
+        BuildIndex buildIndex = new BuildIndex(proteinSequenceMap, "KR", "P", true, null, null, null, 1);
         Multimap<String, String> results = buildIndex.getTargetPeptideProteinMap();
         Multimap<String, String> groundTruth = HashMultimap.create();
         groundTruth.put("nSSDSDSKc", "pro1");
