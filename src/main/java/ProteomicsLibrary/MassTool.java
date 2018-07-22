@@ -654,6 +654,31 @@ public class MassTool {
         return peptide.replaceAll("L", "I");
     }
 
+    public String getMutatedPeptide(String peptide) {
+        AA[] aaArray = seqToAAList(peptide);
+        StringBuilder sb = new StringBuilder();
+        char[] tempArray = new char[]{'H', 'I', 'L', 'K', 'M', 'F', 'T', 'W', 'V', 'R', 'C', 'Q', 'G', 'P', 'Y', 'A', 'D', 'N', 'E', 'S'};
+        for (AA aa : aaArray) {
+            if (Math.abs(aa.ptmDeltaMass) > 0.1) {
+                double temp = massTable.get(aa.aa) + aa.ptmDeltaMass;
+                boolean ok = false;
+                for (char aa2 : tempArray) {
+                    if (Math.abs(temp - massTable.get(aa2)) <= ms2Tolerance) {
+                        sb.append(aa2);
+                        ok = true;
+                        break;
+                    }
+                }
+                if (!ok) {
+                    sb.append(aa.toString());
+                }
+            } else {
+                sb.append(aa.toString());
+            }
+        }
+        return sb.toString();
+    }
+
     static Pattern getDigestSitePattern(String cleavageSite, String protectionSite, boolean cleavageFromCTerm) {
         Pattern digestSitePattern;
         if (cleavageFromCTerm) {

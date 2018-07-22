@@ -405,4 +405,16 @@ public class MassToolTest {
         assertEquals("nSDEIISDc", MassTool.L2I("nSDEILSDc"));
         assertEquals("nSDEIISDc", MassTool.L2I("nSDELLSDc"));
     }
+
+    @Test
+    public void getMutatedPeptide() {
+        MassTool massTool = new MassTool(1, "KR", "P", true, null, null, null, 0.01, 0, "N14");
+        assertEquals("nSDEKISDc", massTool.getMutatedPeptide("nSDEF(-18.973)ISDc"));
+        assertEquals("nSD(23.332)EKISDc", massTool.getMutatedPeptide("nSD(23.332)EF(-18.973)ISDc"));
+        assertEquals("nSD(23.330)EKISDc", massTool.getMutatedPeptide("nSD(23.33)EF(-18.973)ISDc"));
+        assertEquals("nSD(0.123)EKISDc", massTool.getMutatedPeptide("nSD(0.123)EF(-18.973)ISDc"));
+        assertEquals("nSDEKISDc", massTool.getMutatedPeptide("nSD(0.06)EF(-18.973)ISDc"));
+        assertEquals("nSHEKISDc", massTool.getMutatedPeptide("nSG(80.037)EF(-18.973)ISDc"));
+        assertEquals("nSG(80.020)EKISDc", massTool.getMutatedPeptide("nSG(80.02)EF(-18.973)ISDc"));
+    }
 }
