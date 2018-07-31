@@ -1,6 +1,6 @@
 package ProteomicsLibrary;
 
-import org.bytedeco.javacpp.gsl;
+import org.apache.commons.math3.distribution.TDistribution;
 
 import java.util.*;
 
@@ -59,10 +59,11 @@ public class Statistics {
     public static double tTestTwoSides(double mean, double sd, double mu, int num) throws Exception { // two-sided t-test
         if (num > 2) {
             double t = (mean - mu) * Math.sqrt(num) / sd;
+            TDistribution tDistribution = new TDistribution(num - 1);
             if (t >= 0) {
-                return 2 * (1 - gsl.gsl_cdf_tdist_P(t, num - 1));
+                return 2 * (1 - tDistribution.cumulativeProbability(t));
             } else {
-                return 2 * gsl.gsl_cdf_tdist_P(t, num - 1);
+                return 2 * tDistribution.cumulativeProbability(t);
             }
         } else {
             throw new Exception(String.format(Locale.US, "The number of elements (%d) is smaller than 3.", num));
