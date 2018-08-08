@@ -56,6 +56,13 @@ public class Statistics {
         }
     }
 
+    public static double getPercentile(Collection<Double> inputList, double percentile) {
+        Double[] inputArray = inputList.toArray(new Double[0]);
+        Arrays.sort(inputArray);
+        int index = (int) Math.ceil((percentile / 100) * inputArray.length);
+        return inputArray[index - 1];
+    }
+
     public static double tTestTwoSides(double mean, double sd, double mu, int num) throws Exception { // two-sided t-test
         if (num > 2) {
             double t = (mean - mu) * Math.sqrt(num) / sd;

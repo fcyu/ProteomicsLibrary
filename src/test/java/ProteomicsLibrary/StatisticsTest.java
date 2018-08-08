@@ -75,6 +75,24 @@ public class StatisticsTest {
     }
 
     @Test
+    public void getPercentile() {
+        List<Double> input = new ArrayList<>();
+        input.add(3.0);
+        input.add(6.0);
+        input.add(7.5);
+        input.add(8.4);
+        input.add(9.2);
+        input.add(10.0);
+        input.add(12.8);
+        input.add(20.3);
+        input.add(12.0);
+        assertEquals(12, Statistics.getPercentile(input, 75), 0.0001);
+        assertEquals(12.8, Statistics.getPercentile(input, 80), 0.0001);
+        assertEquals(6, Statistics.getPercentile(input, 12), 0.0001);
+        assertEquals(7.5, Statistics.getPercentile(input, 25), 0.0001);
+    }
+
+    @Test
     public void tTestTwoSides() throws Exception {
         assertEquals(0.0571, Statistics.tTestTwoSides(2, 2.9, 0, 10), 1e-4);
         assertEquals(0.3688, Statistics.tTestTwoSides(-1, 6, 0, 30), 1e-4);
