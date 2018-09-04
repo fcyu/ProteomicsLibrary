@@ -78,32 +78,40 @@ public class Statistics {
     }
 
     public static Map<Double, Double> BHFDR(Collection<Double> pValueList) {
-        Double[] pValueArray = pValueList.toArray(new Double[0]);
-        Arrays.sort(pValueArray);
+        if (pValueList.isEmpty()) {
+            return new HashMap<>();
+        } else if (pValueList.size() == 1) {
+            Map<Double, Double> pValueFDRMap = new HashMap<>();
+            pValueFDRMap.put(pValueList.iterator().next(), pValueList.iterator().next());
+            return pValueFDRMap;
+        } else {
+            Double[] pValueArray = pValueList.toArray(new Double[0]);
+            Arrays.sort(pValueArray);
 
-        double[] tempArray = new double[pValueArray.length];
-        for (int i = 0; i < pValueArray.length; ++i) {
-            tempArray[i] = pValueArray[i] * pValueArray.length / (i + 1);
-        }
-
-        double[] fdrArray = new double[tempArray.length];
-        double lastFdr = tempArray[tempArray.length - 1];
-        fdrArray[fdrArray.length - 1] = lastFdr;
-        for (int i = tempArray.length - 2; i >= 0; --i) {
-            if (tempArray[i] >= lastFdr) {
-                fdrArray[i] = lastFdr;
-            } else {
-                fdrArray[i] = tempArray[i];
-                lastFdr = tempArray[i];
+            double[] tempArray = new double[pValueArray.length];
+            for (int i = 0; i < pValueArray.length; ++i) {
+                tempArray[i] = pValueArray[i] * pValueArray.length / (i + 1);
             }
-        }
 
-        Map<Double, Double> pValueFDRMap = new HashMap<>();
-        for (int i = 0; i < pValueArray.length; ++i) {
-            pValueFDRMap.put(pValueArray[i], fdrArray[i]);
-        }
+            double[] fdrArray = new double[tempArray.length];
+            double lastFdr = tempArray[tempArray.length - 1];
+            fdrArray[fdrArray.length - 1] = lastFdr;
+            for (int i = tempArray.length - 2; i >= 0; --i) {
+                if (tempArray[i] >= lastFdr) {
+                    fdrArray[i] = lastFdr;
+                } else {
+                    fdrArray[i] = tempArray[i];
+                    lastFdr = tempArray[i];
+                }
+            }
 
-        return pValueFDRMap;
+            Map<Double, Double> pValueFDRMap = new HashMap<>();
+            for (int i = 0; i < pValueArray.length; ++i) {
+                pValueFDRMap.put(pValueArray[i], fdrArray[i]);
+            }
+
+            return pValueFDRMap;
+        }
     }
 
     public static double calPearsonCorrelationCoefficient(double[] input1, double[] input2) throws Exception{
