@@ -226,6 +226,11 @@ public class MassTool {
         massTable.put('#', massTable.get('I')); // for I and L.
         massTable.put('$', (massTable.get('Q') + massTable.get('K')) * 0.5); // for Q and K.
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
+        massTable.put('B', 0d);
+        massTable.put('J', 0d);
+        massTable.put('X', 0d);
+        massTable.put('Z', 0d);
+        massTable.put('*', 0d);
 
         digestSitePattern1 = getDigestSitePattern(cleavageSite1, protectionSite1, cleavageFromCTerm1);
         digestSitePatternForLinkSiteChecking1 = getDigestSitePatternForLinkSiteChecking(cleavageSite1, protectionSite1, cleavageFromCTerm1);
