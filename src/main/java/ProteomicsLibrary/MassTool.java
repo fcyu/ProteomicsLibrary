@@ -40,8 +40,13 @@ public class MassTool {
         n1514DiffMap.put('W', N1514_DIFF * 2);
         n1514DiffMap.put('U', N1514_DIFF);
         n1514DiffMap.put('O', N1514_DIFF * 3);
+        n1514DiffMap.put('B', 0d);
+        n1514DiffMap.put('J', 0d);
+        n1514DiffMap.put('X', 0d);
+        n1514DiffMap.put('Z', 0d);
         n1514DiffMap.put('n', 0d);
         n1514DiffMap.put('c', 0d);
+        n1514DiffMap.put('*', 0d);
     }
 
     public final double H2O;
@@ -270,6 +275,11 @@ public class MassTool {
         fixModMap.put('W', 0d);
         fixModMap.put('U', 0d);
         fixModMap.put('O', 0d);
+        fixModMap.put('B', 0d);
+        fixModMap.put('J', 0d);
+        fixModMap.put('X', 0d);
+        fixModMap.put('Z', 0d);
+        fixModMap.put('*', 0d);
         fixModMap.put('n', 0d);
         fixModMap.put('c', 0d);
 
@@ -433,6 +443,12 @@ public class MassTool {
         massTable.put('c', fixModMap.get('c'));
         massTable.put('#', massTable.get('I')); // for I and L.
         massTable.put('$', (massTable.get('Q') + massTable.get('K')) * 0.5); // for Q and K.
+        massTable.put('B', 0d);
+        massTable.put('J', 0d);
+        massTable.put('X', 0d);
+        massTable.put('Z', 0d);
+        massTable.put('*', 0d);
+
         H2O = elementTable.get("H") * 2 + elementTable.get("O");
 
         digestSitePattern1 = getDigestSitePattern(cleavageSite1, protectionSite1, cleavageFromCTerm1);
