@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class BinomialTest {
 
     @Test
-    public void calPValue() throws Exception {
+    public void calProbLargerThanOrEqualTo() throws Exception {
         Binomial binomial = new Binomial(100);
         assertEquals(0.08146, binomial.calProbLargerThanOrEqualTo(5, 2, 0.1), 0.0001);
         assertEquals(0, binomial.calProbLargerThanOrEqualTo(6, 6, 0.01), 0.0001);
@@ -16,7 +16,7 @@ public class BinomialTest {
     }
 
     @Test(expected = Exception.class)
-    public void calPValue2() throws Exception{
+    public void calProbLargerThanOrEqualTo2() throws Exception{
         Binomial binomial = new Binomial(10);
         binomial.calProbLargerThanOrEqualTo(11, 2, 0.01);
         binomial.calProbLargerThanOrEqualTo(3, 5, 0.01);
