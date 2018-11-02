@@ -19,8 +19,18 @@ public class BinomialTest {
     public void calProbLargerThanOrEqualTo2() throws Exception{
         Binomial binomial = new Binomial(10);
         binomial.calProbLargerThanOrEqualTo(11, 2, 0.01);
-        binomial.calProbLargerThanOrEqualTo(3, 5, 0.01);
-        binomial.calProbLargerThanOrEqualTo(0, 1, 0.01);
+    }
+
+    @Test(expected = Exception.class)
+    public void calProbLargerThanOrEqualTo3() throws Exception{
+        Binomial binomial = new Binomial(10);
+        binomial.calProbLargerThanOrEqualTo(10, 5, 0.01);
+    }
+
+    @Test(expected = Exception.class)
+    public void calProbLargerThanOrEqualTo4() throws Exception{
+        Binomial binomial = new Binomial(10);
+        binomial.calProbLargerThanOrEqualTo(6, 7, 0.01);
     }
 
     @Test
@@ -36,7 +46,17 @@ public class BinomialTest {
     public void calProbSmallerThanOrEqualTo2() throws Exception{
         Binomial binomial = new Binomial(10);
         binomial.calProbSmallerThanOrEqualTo(11, 2, 0.01);
-        binomial.calProbSmallerThanOrEqualTo(3, 5, 0.01);
-        binomial.calProbSmallerThanOrEqualTo(0, 1, 0.01);
+    }
+
+    @Test(expected = Exception.class)
+    public void calProbSmallerThanOrEqualTo3() throws Exception{
+        Binomial binomial = new Binomial(10);
+        binomial.calProbSmallerThanOrEqualTo(10, 5, 0.01);
+    }
+
+    @Test(expected = Exception.class)
+    public void calProbSmallerThanOrEqualTo4() throws Exception{
+        Binomial binomial = new Binomial(10);
+        binomial.calProbSmallerThanOrEqualTo(6, 8, 0.01);
     }
 }

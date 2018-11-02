@@ -26,8 +26,8 @@ public class Binomial {
         if (N == 0 && k > 0) {
             throw new Exception("N == 0 but k > 0.");
         }
-        if (N > log10FactorialArray.length) {
-            throw new IndexOutOfBoundsException(String.format(Locale.US, "N = %d is larger than the maxValue (%d) allowed. Please create a Binomial object with a larger maxValue.", N, log10FactorialArray.length));
+        if (N >= log10FactorialArray.length) {
+            throw new IndexOutOfBoundsException(String.format(Locale.US, "N = %d is larger than or equal to maxValue (%d). Please create a Binomial object with a larger maxValue.", N, log10FactorialArray.length));
         }
 
         if (N == 0 && k == 0) {
@@ -51,8 +51,8 @@ public class Binomial {
         if (N == 0 && k > 0) {
             throw new Exception("N == 0 but k > 0.");
         }
-        if (N > log10FactorialArray.length) {
-            throw new IndexOutOfBoundsException(String.format(Locale.US, "N = %d is larger than the maxValue (%d) allowed. Please create a Binomial object with a larger maxValue.", N, log10FactorialArray.length));
+        if (N >= log10FactorialArray.length) {
+            throw new IndexOutOfBoundsException(String.format(Locale.US, "N = %d is larger than or equal to maxValue (%d). Please create a Binomial object with a larger maxValue.", N, log10FactorialArray.length));
         }
 
         if (N == 0 && k == 0) {
