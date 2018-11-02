@@ -165,4 +165,96 @@ public class Statistics {
             throw new Exception(String.format(Locale.US, "The input length (%d) is smaller than 2", input.size()));
         }
     }
+
+    public static double fisherExactTest(int a, int b, int c, int d, int type) throws Exception { // type < 0: left side; type > 0: right side; type == 0: two side
+        // rearrange rows and columns
+        if (a + b > c + d) {
+            int temp = a;
+            a = c;
+            c = temp;
+            temp  = b;
+            b = d;
+            d = temp;
+        }
+
+        if (a + c > b + d) {
+            int temp = a;
+            a = b;
+            b = temp;
+            temp = c;
+            c = d;
+            d = temp;
+        }
+
+        Hypergeometric hypergeometric = new Hypergeometric(a + b + c + d + 1);
+        if (type > 0) {
+            double pSum = 0;
+            double p = hypergeometric.calPMF(a, b, c, d);
+            while (b >= 0 && c >= 0) {
+                pSum += p;
+                if (b == 0 || c == 0) {
+                    break;
+                }
+                ++a;
+                --b;
+                --c;
+                ++d;
+                p = hypergeometric.calPMF(a, b, c, d);
+            }
+            return pSum;
+        } else if (type < 0) {
+            double pSum = 0;
+            double p = hypergeometric.calPMF(a, b, c, d);
+            while (a >= 0 && d >= 0) {
+                pSum += p;
+                if (a == 0 || d == 0) {
+                    break;
+                }
+                --a;
+                ++b;
+                ++c;
+                --d;
+                p = hypergeometric.calPMF(a, b, c, d);
+            }
+            return pSum;
+        } else {
+            int aOriginal = a;
+            int bOriginal = b;
+            int cOriginal = c;
+            int dOriginal = d;
+
+            double pSumRight = 0;
+            double p = hypergeometric.calPMF(a, b, c, d);
+            while (b >= 0 && c >= 0) {
+                pSumRight += p;
+                if (b == 0 || c == 0) {
+                    break;
+                }
+                ++a;
+                --b;
+                --c;
+                ++d;
+                p = hypergeometric.calPMF(a, b, c, d);
+            }
+
+            a = aOriginal;
+            b = bOriginal;
+            c = cOriginal;
+            d = dOriginal;
+            double pSumLeft = 0;
+            p = hypergeometric.calPMF(a, b, c, d);
+            while (a >= 0 && d >= 0) {
+                pSumLeft += p;
+                if (a == 0 || d == 0) {
+                    break;
+                }
+                --a;
+                ++b;
+                ++c;
+                --d;
+                p = hypergeometric.calPMF(a, b, c, d);
+            }
+            return Math.min(1, 2 * Math.min(pSumLeft, pSumRight));
+        }
+    }
 }

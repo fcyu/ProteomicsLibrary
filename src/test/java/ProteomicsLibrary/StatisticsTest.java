@@ -193,4 +193,17 @@ public class StatisticsTest {
             assertEquals(groundTruth[i], results[i], 1e-4);
         }
     }
+
+    @Test
+    public void fisherExactTest() throws Exception {
+        assertEquals(0.6573, Statistics.fisherExactTest(2, 3, 4, 5, -1), 0.0001);
+        assertEquals(1, Statistics.fisherExactTest(2, 3, 4, 5, 0), 0.0001);
+        assertEquals(0.6573, Statistics.fisherExactTest(4, 5, 2, 3, -1), 0.0001);
+        assertEquals(1, Statistics.fisherExactTest(4, 5, 2, 3, 0), 0.0001);
+        assertEquals(0.0005, Statistics.fisherExactTest(10, 3, 4, 20, 1), 0.0001);
+        assertEquals(0.001, Statistics.fisherExactTest(10, 3, 4, 20, 0), 0.0001);
+        assertEquals(0.0005, Statistics.fisherExactTest(3, 10, 20, 4, 1), 0.0001);
+        assertEquals(0.001, Statistics.fisherExactTest(3, 10, 20, 4, 0), 0.0001);
+        assertEquals(0.7425, Statistics.fisherExactTest(20, 30, 40, 50, 0), 0.0001);
+    }
 }
