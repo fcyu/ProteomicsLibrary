@@ -257,4 +257,20 @@ public class Statistics {
             return Math.min(1, 2 * Math.min(pSumLeft, pSumRight));
         }
     }
+
+    public static double contingencyTableChiSquareTest(int a, int b, int c, int d) throws  Exception {
+        // a    b
+        // c    d
+        if (a < 5 || b < 5 || c < 5 || d < 5) {
+            throw new Exception("One of the entry is smaller than 5. Try Fisher's exact test instead.");
+        }
+        double total = a + b + c + d;
+        double aE = (a + b) * (a + c) / total;
+        double bE = (a + b) * (b + d) / total;
+        double cE = (c + d) * (a + c) / total;
+        double dE = (c + d) * (b + d) / total;
+        double chiSquare = (a - aE) * (a - aE) / aE + (b - bE) * (b - bE) / bE + (c - cE) * (c - cE) / cE + (d - dE) * (d - dE) / dE;
+        ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(1);
+        return 1 - chiSquaredDistribution.cumulativeProbability(chiSquare);
+    }
 }
