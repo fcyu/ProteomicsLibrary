@@ -208,14 +208,9 @@ public class StatisticsTest {
     }
 
     @Test
-    public void contingencyTableChiSquareTest() throws Exception {
+    public void contingencyTableChiSquareTest() {
         assertEquals(0.6106, Statistics.contingencyTableChiSquareTest(20, 30, 40, 50), 0.0001);
         assertEquals(0.6106, Statistics.contingencyTableChiSquareTest(40, 50, 20, 30), 0.0001);
         assertEquals(0.0019, Statistics.contingencyTableChiSquareTest(10, 25, 28, 16), 0.0001);
-    }
-
-    @Test(expected = Exception.class)
-    public void contingencyTableChiSquareTest2() throws Exception {
-        assertEquals(0.6106, Statistics.contingencyTableChiSquareTest(2, 3, 4, 5), 0.0001);
     }
 }

@@ -258,12 +258,13 @@ public class Statistics {
         }
     }
 
-    public static double contingencyTableChiSquareTest(int a, int b, int c, int d) throws  Exception {
+    public static double contingencyTableChiSquareTest(int a, int b, int c, int d) {
         // a    b
         // c    d
         if (a < 5 || b < 5 || c < 5 || d < 5) {
-            throw new Exception("One of the entry is smaller than 5. Try Fisher's exact test instead.");
+            System.err.println(String.format(Locale.US, "One of the entry is smaller than 5 (a = %d, b = %d, c = %d, d = %d). Try Fisher's exact test instead.", a, b, c, d));
         }
+
         double total = a + b + c + d;
         double aE = (a + b) * (a + c) / total;
         double bE = (a + b) * (b + d) / total;
