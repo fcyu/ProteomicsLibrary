@@ -7,8 +7,9 @@ import java.util.*;
 public class Statistics {
 
     public static double calMedian(Collection<Double> inputList) {
+    public static double calMedian(Collection<Double> inputList) throws Exception {
         if (inputList.isEmpty()) {
-            return 0;
+            throw new Exception("There is no element in the input list.");
         } else {
             Double[] inputArray = inputList.toArray(new Double[0]);
             Arrays.sort(inputArray);
@@ -20,7 +21,7 @@ public class Statistics {
         }
     }
 
-    public static double calMean(double[] input) {
+    public static double calMean(double[] input) throws Exception {
         if (input.length > 0) {
             double mean = 0;
             for (double v : input) {
@@ -28,13 +29,13 @@ public class Statistics {
             }
             return mean / input.length;
         } else {
-            return 0;
+            throw new Exception("There is no element in the input array.");
         }
     }
 
-    public static double calMean(Collection<Double> inputList) {
+    public static double calMean(Collection<Double> inputList) throws Exception {
         if (inputList.isEmpty()) {
-            return 0;
+            throw new Exception("There is no element in the input list.");
         } else {
             double mean = 0;
             for (double v : inputList) {
@@ -56,11 +57,16 @@ public class Statistics {
         }
     }
 
-    public static double getPercentile(Collection<Double> inputList, double percentile) {
-        Double[] inputArray = inputList.toArray(new Double[0]);
-        Arrays.sort(inputArray);
-        int index = (int) Math.ceil((percentile / 100) * inputArray.length);
-        return inputArray[index - 1];
+    public static double getPercentile(Collection<Double> inputList, double percentile) throws Exception {
+        if (inputList.isEmpty()) {
+            throw new Exception("There is no element in the input list.");
+        } else {
+            Double[] inputArray = inputList.toArray(new Double[0]);
+            Arrays.sort(inputArray);
+            int index = (int) Math.ceil((percentile / 100) * inputArray.length);
+            return inputArray[index - 1];
+        }
+    }
     }
 
     public static double tTestTwoSides(double mean, double sd, double mu, int num) throws Exception { // two-sided t-test

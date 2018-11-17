@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class StatisticsTest {
 
     @Test
-    public void calMedian() {
+    public void calMedian() throws Exception {
         List<Double> input = new LinkedList<>();
         input.add(1.1);
         input.add(2.3);
@@ -34,16 +34,26 @@ public class StatisticsTest {
         assertEquals(1.7, Statistics.calMedian(input), 1e-6);
     }
 
+    @Test(expected = Exception.class)
+    public void calMedian2() throws Exception {
+        double temp = Statistics.calMedian(new LinkedList<>());
+    }
+
     @Test
-    public void calMean() {
+    public void calMean() throws Exception {
         double[] input = new double[]{1.1, 1.2, 3.4};
         assertEquals(1.9, Statistics.calMean(input), 1e-6);
         input = new double[]{1.1, 1.2, 0};
         assertEquals(0.766667, Statistics.calMean(input), 0.0001);
     }
 
+    @Test(expected = Exception.class)
+    public void calMean2() throws Exception {
+        double temp = Statistics.calMean(new double[0]);
+    }
+
     @Test
-    public void calMean1() {
+    public void calMean1() throws Exception {
         List<Double> input = new ArrayList<>();
         input.add(1.1);
         input.add(1.2);
@@ -55,6 +65,11 @@ public class StatisticsTest {
         input.add(1.2);
         input.add(0d);
         assertEquals(0.766667, Statistics.calMean(input), 0.0001);
+    }
+
+    @Test(expected = Exception.class)
+    public void calMean3() throws Exception {
+        double temp = Statistics.calMean(new LinkedList<>());
     }
 
     @Test
@@ -75,7 +90,7 @@ public class StatisticsTest {
     }
 
     @Test
-    public void getPercentile() {
+    public void getPercentile() throws Exception {
         List<Double> input = new ArrayList<>();
         input.add(3.0);
         input.add(6.0);
@@ -90,6 +105,11 @@ public class StatisticsTest {
         assertEquals(12.8, Statistics.getPercentile(input, 80), 0.0001);
         assertEquals(6, Statistics.getPercentile(input, 12), 0.0001);
         assertEquals(7.5, Statistics.getPercentile(input, 25), 0.0001);
+    }
+
+    @Test(expected = Exception.class)
+    public void getPercentile2() throws Exception {
+        double temp = Statistics.getPercentile(new LinkedList<>(), 75);
     }
 
     @Test
