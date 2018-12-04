@@ -172,55 +172,35 @@ public class Statistics {
         }
     }
 
-    public static double fisherExactTest(int a, int b, int c, int d, int type) throws Exception { // type < 0: left side; type > 0: right side; type == 0: two side
-        // rearrange rows and columns
-        if (a + b > c + d) {
-            int temp = a;
-            a = c;
-            c = temp;
-            temp  = b;
-            b = d;
-            d = temp;
-        }
+    public static double fisherExactTest(int a, int b, int c, int d, int alternative) throws Exception {
+        // alternative < 0: pCase < pControl; alternative > 0: pCase > pControl; alternative == 0: pCase != pControl
+        // a    b // case group
+        // c    d // control group
+        // The two-sided algorithm are from http://mathworld.wolfram.com/FishersExactTest.html
 
-        if (a + c > b + d) {
-            int temp = a;
-            a = b;
-            b = temp;
-            temp = c;
-            c = d;
-            d = temp;
+        if (a < 0 || b < 0 || c < 0 || d < 0) {
+            throw new Exception(String.format(Locale.US, "There are counts smaller than 0: a = %d, b = %d, c = %d, d = %d.", a, b, c, d));
         }
 
         Hypergeometric hypergeometric = new Hypergeometric(a + b + c + d + 1);
-        if (type > 0) {
-            double pSum = 0;
-            double p = hypergeometric.calPMF(a, b, c, d);
-            while (b >= 0 && c >= 0) {
-                pSum += p;
-                if (b == 0 || c == 0) {
-                    break;
-                }
+        if (alternative > 0) {
+            double pSum = hypergeometric.calPMF(a, b, c, d);
+            while (b > 0 && c > 0) {
                 ++a;
                 --b;
                 --c;
                 ++d;
-                p = hypergeometric.calPMF(a, b, c, d);
+                pSum += hypergeometric.calPMF(a, b, c, d);
             }
             return pSum;
-        } else if (type < 0) {
-            double pSum = 0;
-            double p = hypergeometric.calPMF(a, b, c, d);
-            while (a >= 0 && d >= 0) {
-                pSum += p;
-                if (a == 0 || d == 0) {
-                    break;
-                }
+        } else if (alternative < 0) {
+            double pSum = hypergeometric.calPMF(a, b, c, d);
+            while (a > 0 && d > 0) {
                 --a;
                 ++b;
                 ++c;
                 --d;
-                p = hypergeometric.calPMF(a, b, c, d);
+                pSum += hypergeometric.calPMF(a, b, c, d);
             }
             return pSum;
         } else {
@@ -229,38 +209,35 @@ public class Statistics {
             int cOriginal = c;
             int dOriginal = d;
 
-            double pSumRight = 0;
-            double p = hypergeometric.calPMF(a, b, c, d);
-            while (b >= 0 && c >= 0) {
-                pSumRight += p;
-                if (b == 0 || c == 0) {
-                    break;
-                }
+            double pBase = hypergeometric.calPMF(aOriginal, bOriginal, cOriginal, dOriginal);
+            double pSum = pBase;
+
+            while (b > 0 && c > 0) {
                 ++a;
                 --b;
                 --c;
                 ++d;
-                p = hypergeometric.calPMF(a, b, c, d);
+                double pTemp = hypergeometric.calPMF(a, b, c, d);
+                if (pTemp <= pBase) {
+                    pSum += pTemp;
+                }
             }
 
             a = aOriginal;
             b = bOriginal;
             c = cOriginal;
             d = dOriginal;
-            double pSumLeft = 0;
-            p = hypergeometric.calPMF(a, b, c, d);
-            while (a >= 0 && d >= 0) {
-                pSumLeft += p;
-                if (a == 0 || d == 0) {
-                    break;
-                }
+            while (a > 0 && d > 0) {
                 --a;
                 ++b;
                 ++c;
                 --d;
-                p = hypergeometric.calPMF(a, b, c, d);
+                double pTemp = hypergeometric.calPMF(a, b, c, d);
+                if (pTemp <= pBase) {
+                    pSum += pTemp;
+                }
             }
-            return Math.min(1, 2 * Math.min(pSumLeft, pSumRight));
+            return Math.min(1, pSum);
         }
     }
 

@@ -215,16 +215,22 @@ public class StatisticsTest {
     }
 
     @Test
-    public void fisherExactTest() throws Exception {
+    public void fisherExactTest() throws Exception { // The ground truch is from R fisher.test()
         assertEquals(0.6573, Statistics.fisherExactTest(2, 3, 4, 5, -1), 0.0001);
         assertEquals(1, Statistics.fisherExactTest(2, 3, 4, 5, 0), 0.0001);
-        assertEquals(0.6573, Statistics.fisherExactTest(4, 5, 2, 3, -1), 0.0001);
+        assertEquals(0.7622, Statistics.fisherExactTest(4, 5, 2, 3, -1), 0.0001);
         assertEquals(1, Statistics.fisherExactTest(4, 5, 2, 3, 0), 0.0001);
-        assertEquals(0.0005, Statistics.fisherExactTest(10, 3, 4, 20, 1), 0.0001);
-        assertEquals(0.001, Statistics.fisherExactTest(10, 3, 4, 20, 0), 0.0001);
-        assertEquals(0.0005, Statistics.fisherExactTest(3, 10, 20, 4, 1), 0.0001);
-        assertEquals(0.001, Statistics.fisherExactTest(3, 10, 20, 4, 0), 0.0001);
-        assertEquals(0.7425, Statistics.fisherExactTest(20, 30, 40, 50, 0), 0.0001);
+        assertEquals(0.0005241, Statistics.fisherExactTest(10, 3, 4, 20, 1), 0.0001);
+        assertEquals(0.0008452, Statistics.fisherExactTest(10, 3, 4, 20, 0), 0.0001);
+        assertEquals(1, Statistics.fisherExactTest(3, 10, 20, 4, 1), 0.0001);
+        assertEquals(0.0008452, Statistics.fisherExactTest(3, 10, 20, 4, 0), 0.0001);
+        assertEquals(0.7219, Statistics.fisherExactTest(20, 30, 40, 50, 0), 0.0001);
+        assertEquals(0.7408, Statistics.fisherExactTest(53, 3405294, 34, 2034187, 0), 0.0001);
+    }
+
+    @Test(expected = Exception.class)
+    public void fisherExactTest2() throws Exception {
+        assertEquals(0.6573, Statistics.fisherExactTest(2, 3, -4, 5, -1), 0.0001);
     }
 
     @Test
