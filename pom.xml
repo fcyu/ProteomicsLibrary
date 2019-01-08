@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>hk.ust.bioinformatics</groupId>
+    <groupId>io.github.fcyu</groupId>
     <artifactId>ProteomicsLibrary</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
@@ -15,16 +15,12 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
-    <organization>
-        <name>Laboratory for Bioinformatics and Computational Biology, HKUST</name>
-        <url>http://bioinformatics.ust.hk/</url>
-    </organization>
+
     <developers>
         <developer>
             <id>FYu</id>
             <name>Fengchao Yu</name>
-            <email>fyuab@connect.ust.hk</email>
-            <organization>ECE, HKUST</organization>
+            <email>fcyucn@gmail.com</email>
         </developer>
     </developers>
 
