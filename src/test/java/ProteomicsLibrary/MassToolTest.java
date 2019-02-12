@@ -55,6 +55,11 @@ public class MassToolTest {
         assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVT(1.0)CILNDQKEMHFRYWc"), 0.001);
         assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVTC(1.0)ILNDQKEMHFRYWc"), 0.001);
         assertEquals(2433.13584353312, massTool.calResidueMass2("nGASPVTC(57.02146)ILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVT1.0CILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVTC[1.0]ILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2433.13584353312, massTool.calResidueMass2("nGASPVTC57.02146ILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2375.11438353312, massTool.calResidueMass2("nGASPVT-1.0CILNDQKEMHFRYWc"), 0.001);
+        assertEquals(2377.11438353312, massTool.calResidueMass2("nGASPVTC+1.0ILNDQKEMHFRYWc"), 0.001);
     }
 
     @Test
@@ -326,6 +331,31 @@ public class MassToolTest {
         seq = "nGH[3.02]UKc";
         result = MassTool.seqToAAList(seq);
         groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
+        assertArrayEquals(groundTruth, result);
+
+        seq = "nGH3.02UKc";
+        result = MassTool.seqToAAList(seq);
+        groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
+        assertArrayEquals(groundTruth, result);
+
+        seq = "nGH(3.02)UKc";
+        result = MassTool.seqToAAList(seq);
+        groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
+        assertArrayEquals(groundTruth, result);
+
+        seq = "nGH+3.02UKc";
+        result = MassTool.seqToAAList(seq);
+        groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
+        assertArrayEquals(groundTruth, result);
+
+        seq = "nGH[+3.02]UKc";
+        result = MassTool.seqToAAList(seq);
+        groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', 3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
+        assertArrayEquals(groundTruth, result);
+
+        seq = "nGH-3.02UKc";
+        result = MassTool.seqToAAList(seq);
+        groundTruth = new AA[]{new AA('n', 0), new AA('G', 0), new AA('H', -3.02), new AA('U', 0), new AA('K', 0), new AA('c', 0)};
         assertArrayEquals(groundTruth, result);
     }
 

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class MassTool {
 
-    private static final Pattern modAAPattern = Pattern.compile("([A-Znc])([(\\[]([0-9.\\-]+)[)\\]])?");
+    private static final Pattern modAAPattern = Pattern.compile("([A-Znc])(([(\\[])?([0-9.\\-+]+)([)\\]])?)?");
     private static final Pattern leftFlankPattern = Pattern.compile("^[A-Z-]\\.");
     private static final Pattern rightFlankPattern = Pattern.compile("\\.[A-Z-]$");
 
@@ -481,8 +481,8 @@ public class MassTool {
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
-            if (matcher.group(3) != null) {
-                deltaMass = Double.valueOf(matcher.group(3));
+            if (matcher.group(4) != null) {
+                deltaMass = Double.valueOf(matcher.group(4));
             }
             totalMass += massTable.get(aa) + deltaMass;
         }
@@ -496,8 +496,8 @@ public class MassTool {
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
-            if (matcher.group(3) != null) {
-                deltaMass = Double.valueOf(matcher.group(3));
+            if (matcher.group(4) != null) {
+                deltaMass = Double.valueOf(matcher.group(4));
             }
             totalMass += massTable.get(aa) - fixModMap.get(aa) + deltaMass;
         }
@@ -511,8 +511,8 @@ public class MassTool {
         while (matcher.find()) {
             char aa = matcher.group(1).charAt(0);
             double deltaMass = 0;
-            if (matcher.group(3) != null) {
-                deltaMass = Double.valueOf(matcher.group(3));
+            if (matcher.group(4) != null) {
+                deltaMass = Double.valueOf(matcher.group(4));
             }
             temp.add(new AA(aa, deltaMass));
         }
