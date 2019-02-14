@@ -15,8 +15,9 @@ public class BuildIndex {
         for (String protein : proteinSequenceMap.keySet()) {
             String proteinSequence = proteinSequenceMap.get(protein);
             Set<String> peptideSet = massTool.buildPeptideSet(proteinSequence);
-            if (proteinSequence.startsWith("M")) {
-                peptideSet.addAll(massTool.buildPeptideSet(proteinSequence.substring(1)));
+            int i = 0;
+            while (proteinSequence.charAt(i) == 'M') {
+                peptideSet.addAll(massTool.buildPeptideSet(proteinSequence.substring(++i)));
             }
 
             for (String peptide : peptideSet) {

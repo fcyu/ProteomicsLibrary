@@ -20,6 +20,10 @@ public class BuildIndexTest {
         proteinSequenceMap = new HashMap<>();
         proteinSequenceMap.put("pro1", "SSDSDSKSDSRSDSDSKPSDS");
         proteinSequenceMap.put("pro2", "SDSKKSDSRDSSK");
+        proteinSequenceMap.put("pro3", "MABC");
+        proteinSequenceMap.put("pro4", "MMDEF");
+        proteinSequenceMap.put("pro5", "MMMGHI");
+        proteinSequenceMap.put("pro6", "MDMJPL");
     }
 
     @Test
@@ -39,6 +43,17 @@ public class BuildIndexTest {
         groundTruth.put("nSDSKKc", "pro2");
         groundTruth.put("nKSDSRc", "pro2");
         groundTruth.put("nSDSRDSSKc", "pro2");
+        groundTruth.put("nMABCc", "pro3");
+        groundTruth.put("nABCc", "pro3");
+        groundTruth.put("nMMDEFc", "pro4");
+        groundTruth.put("nMDEFc", "pro4");
+        groundTruth.put("nDEFc", "pro4");
+        groundTruth.put("nMMMGHIc", "pro5");
+        groundTruth.put("nMMGHIc", "pro5");
+        groundTruth.put("nMGHIc", "pro5");
+        groundTruth.put("nGHIc", "pro5");
+        groundTruth.put("nMDMJPLc", "pro6");
+        groundTruth.put("nDMJPLc", "pro6");
         assertEquals(groundTruth.size(), results.size());
         for (String peptide : groundTruth.keySet()) {
             Collection<String> resultSet = results.get(peptide);
