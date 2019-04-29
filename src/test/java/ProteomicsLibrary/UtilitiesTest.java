@@ -44,4 +44,63 @@ public class UtilitiesTest {
         String[] groundTruth = new String[]{"1", "2", "\"3\t4,5\"", "2", "\"3,4\t\""};
         assertArrayEquals(groundTruth, result);
     }
+
+    @Test
+    public void getBasenameExt() {
+        String[] basenameExt;
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.startsWith("win")) {
+            basenameExt = Utilities.getBasenameExt("C:\\MSFragger\\dev\\01A.mzML", false);
+            assertArrayEquals(basenameExt, new String[]{"01A", "mzML"});
+
+            basenameExt = Utilities.getBasenameExt("C:\\MSFragger\\dev.ddd\\01A.mzML_xnuy.", false);
+            assertArrayEquals(basenameExt, new String[]{"01A.mzML_xnuy", ""});
+
+            basenameExt = Utilities.getBasenameExt("C:\\MSFragger\\dev.ddd\01A.mzML", false);
+            assertArrayEquals(basenameExt, new String[]{"dev.ddd\01A", "mzML"});
+
+            basenameExt = Utilities.getBasenameExt("C:\\MSFragger\\dev\\01A.mzML", true);
+            assertArrayEquals(basenameExt, new String[]{"C:\\MSFragger\\dev\\01A", "mzML"});
+
+            basenameExt = Utilities.getBasenameExt("C:\\MSFragger\\dev.ddd\\01A.mzML_xnuy.", true);
+            assertArrayEquals(basenameExt, new String[]{"C:\\MSFragger\\dev.ddd\\01A.mzML_xnuy", ""});
+
+            basenameExt = Utilities.getBasenameExt("C:\\MSFragger\\dev.ddd\01A.mzML", true);
+            assertArrayEquals(basenameExt, new String[]{"C:\\MSFragger\\dev.ddd\01A", "mzML"});
+        } else {
+            basenameExt = Utilities.getBasenameExt("/MSFraggerdev/01A.mzML", false);
+            assertArrayEquals(basenameExt, new String[]{"01A", "mzML"});
+
+            basenameExt = Utilities.getBasenameExt("/MSFragger/dev.ddd/01A.mzML_xnuy.", false);
+            assertArrayEquals(basenameExt, new String[]{"01A.mzML_xnuy", ""});
+
+            basenameExt = Utilities.getBasenameExt("/MSFragger/dev/01A.mzML", true);
+            assertArrayEquals(basenameExt, new String[]{"/MSFragger/dev/01A", "mzML"});
+
+            basenameExt = Utilities.getBasenameExt("/MSFragger/dev.ddd/01A.mzML_xnuy.", true);
+            assertArrayEquals(basenameExt, new String[]{"/MSFragger/dev.ddd/01A.mzML_xnuy", ""});
+
+            basenameExt = Utilities.getBasenameExt("~/MSFragger/dev/01A.mzML", true);
+            assertArrayEquals(basenameExt, new String[]{"~/MSFragger/dev/01A", "mzML"});
+        }
+
+
+        basenameExt = Utilities.getBasenameExt("01A.mzML", false);
+        assertArrayEquals(basenameExt, new String[]{"01A", "mzML"});
+
+        basenameExt = Utilities.getBasenameExt("01A.mzML_xnuy.mzXML", false);
+        assertArrayEquals(basenameExt, new String[]{"01A.mzML_xnuy", "mzXML"});
+
+        basenameExt = Utilities.getBasenameExt("01A.mzML_xnuy.", false);
+        assertArrayEquals(basenameExt, new String[]{"01A.mzML_xnuy", ""});
+
+        basenameExt = Utilities.getBasenameExt("01A", false);
+        assertArrayEquals(basenameExt, new String[]{"01A", ""});
+
+        basenameExt = Utilities.getBasenameExt("01A.mzML_xnuy.mzXML", true);
+        assertArrayEquals(basenameExt, new String[]{"01A.mzML_xnuy", "mzXML"});
+
+        basenameExt = Utilities.getBasenameExt("01A", true);
+        assertArrayEquals(basenameExt, new String[]{"01A", ""});
+    }
 }

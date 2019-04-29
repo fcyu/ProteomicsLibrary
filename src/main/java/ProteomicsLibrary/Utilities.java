@@ -1,5 +1,6 @@
 package ProteomicsLibrary;
 
+import java.io.File;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,19 @@ public class Utilities {
                     }
                 }
             }
+        }
+    }
+
+    public static String[] getBasenameExt(String filePath, boolean keepParent) {
+        String fileName = filePath;
+        if (!keepParent) {
+            fileName = (new File(filePath)).getName();
+        }
+        int idx = fileName.lastIndexOf(".");
+        if (idx > -1) {
+            return new String[]{fileName.substring(0, idx), fileName.substring(fileName.lastIndexOf(".") + 1)};
+        } else {
+            return new String[]{fileName, ""};
         }
     }
 }
