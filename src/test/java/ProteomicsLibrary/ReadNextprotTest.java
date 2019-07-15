@@ -35,7 +35,7 @@ public class ReadNextprotTest {
         Multimap<Integer, String> locationPsiModMap = HashMultimap.create();
         locationPsiModMap.put(318, "MOD:00115");
         locationPsiModMap.put(325, "MOD:00115");
-        assertEquals("A0A075B6H9-1", entry.id);
+        assertEquals("nxp:NX_A0A075B6H9-1", entry.id);
         assertEquals("MAWTPLLFLTLLLHCTGSLSQLVLTQSPSASASLGASVKLTCTLSSGHSSYAIAWHQQQPEKGPRYLMKLNSDGSHSKGDGIPDRFSGSSSGAERYLTISSLQSEDEADYYCQTWGTGI", entry.sequence);
         assertEquals(locationVariantMap.size(), entry.locationVariantMap.size());
         for (int location : locationVariantMap.keySet()) {

@@ -26,9 +26,9 @@ public class DbTool {
         if (databaseType.contentEquals("tair")) {
             headerPattern = Pattern.compile("^>([^\\s]+)[\\s|]*(.*)$");
         } else if (databaseType.contentEquals("uniprot") || databaseType.contentEquals("swissprot")) {
-            headerPattern = Pattern.compile("^>[^|]+\\|(.+)\\|(.+)$");
+            headerPattern = Pattern.compile("^>([^ ]+) *(.*)$");
         } else if (databaseType.contentEquals("nextprot")) {
-            headerPattern = Pattern.compile("^>nxp:NX_([^ ]+) *(.*)");
+            headerPattern = Pattern.compile("^>([^ ]+) *(.*)");
         } else if (databaseType.contentEquals("contaminants") || databaseType.contentEquals("itag") || databaseType.contentEquals("refseq")) {
             headerPattern = Pattern.compile("^>([^ ]+) *(.*)$");
         } else if (databaseType.contentEquals("others")) {
