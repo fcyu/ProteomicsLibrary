@@ -1,12 +1,32 @@
+/*
+ * Copyright 2018-2019 The Hong Kong University of Science and Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ProteomicsLibrary;
 
+import ProteomicsLibrary.Types.Hypergeometric;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.TDistribution;
 
 import java.util.*;
 
 public class Statistics {
 
-    public static double calMedian(Collection<Double> inputList) {
+    private static final NormalDistribution normalDistribution = new NormalDistribution(0, 1);
+
     public static double calMedian(Collection<Double> inputList) throws Exception {
         if (inputList.isEmpty()) {
             throw new Exception("There is no element in the input list.");
@@ -67,6 +87,15 @@ public class Statistics {
             return inputArray[index - 1];
         }
     }
+
+    public static double calMaxQuantProteinPValue(double r, double rMinus1, double r0, double r1) { // todo: add a unit test
+        double z;
+        if (r >= r0) {
+            z = (r - r0) / (r1 - r0);
+        } else {
+            z = (r0 - r) / (r0 - rMinus1);
+        }
+        return 1 - normalDistribution.cumulativeProbability(z);
     }
 
     public static double tTestTwoSides(double mean, double sd, double mu, int num) throws Exception { // two-sided t-test
